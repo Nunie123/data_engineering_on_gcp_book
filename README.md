@@ -1,22 +1,22 @@
-# Data Engineering in the Cloud: Start to Finish
+# Data Engineering on the Google Cloud Platform: Start to Finish
 The completely free E-Book for setting up and running a Data Engineering stack on Google Cloud Platform.
 
-NOTE: This book is currently incomplete. If you find errors or would like to fill in the gaps, read the **Contributions** section below.
+NOTE: This book is currently incomplete. If you find errors or would like to fill in the gaps, read the [Contributions section](https://github.com/Nunie123/data_engineering_on_gcp_book#user-content-contributions).
 
 ## Table of Contents
 **Preface** <br>
-Chapter 1: Setting up a GCP Account
-Chapter 2: Batch Processing Orchestration with Composer and Airflow
-Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)
-Chapter 4: Building a Data Warehouse with BigQuery
-Chapter 5: Setting up Event-Triggered Pipelines with Cloud Functions
-Chapter 6: Parallel Processing with DataProc and Spark
-Chapter 7: Streaming Data with Pub/Sub
-Chapter 8: Managing Credentials with Google Secret Manager
-Chapter 9: Creating a Local Development Environment
-Chapter 10: Infrastructure as Code with Terraform
-Chapter 11: Continuous Integration with Jenkins
-Chapter 12: Monitoring and Alerting
+Chapter 1: Setting up a GCP Account <br>
+Chapter 2: Batch Processing Orchestration with Composer and Airflow <br>
+Chapter 3: Building a Data Lake with Google Cloud Storage (GCS) <br>
+Chapter 4: Building a Data Warehouse with BigQuery <br>
+Chapter 5: Setting up Event-Triggered Pipelines with Cloud Functions <br>
+Chapter 6: Parallel Processing with DataProc and Spark <br>
+Chapter 7: Streaming Data with Pub/Sub <br>
+Chapter 8: Managing Credentials with Google Secret Manager <br>
+Chapter 9: Creating a Local Development Environment <br>
+Chapter 10: Infrastructure as Code with Terraform <br>
+Chapter 11: Continuous Integration with Jenkins <br>
+Chapter 12: Monitoring and Alerting <br>
 Appendix A: Example Code Repository
 
 
