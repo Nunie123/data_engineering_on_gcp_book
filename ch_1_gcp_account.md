@@ -6,17 +6,18 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 ## Table of Contents
 [Preface](https://github.com/Nunie123/data_engineering_on_gcp_book) <br>
 **Chapter 1: Setting up a GCP Account** <br>
-Chapter 2: Batch Processing Orchestration with Composer and Airflow <br>
-Chapter 3: Building a Data Lake with Google Cloud Storage (GCS) <br>
+[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_d_orchestration.md) <br>
+[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md) <br>
 Chapter 4: Building a Data Warehouse with BigQuery <br>
-Chapter 5: Setting up Event-Triggered Pipelines with Cloud Functions <br>
-Chapter 6: Parallel Processing with DataProc and Spark <br>
-Chapter 7: Streaming Data with Pub/Sub <br>
-Chapter 8: Managing Credentials with Google Secret Manager <br>
-Chapter 9: Creating a Local Development Environment <br>
-Chapter 10: Infrastructure as Code with Terraform <br>
-Chapter 11: Continuous Integration with Jenkins <br>
-Chapter 12: Monitoring and Alerting <br>
+Chapter 5: Setting up DAGs in Composer and Airflow <br>
+Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions <br>
+Chapter 7: Parallel Processing with DataProc and Spark <br>
+Chapter 8: Streaming Data with Pub/Sub <br>
+Chapter 9: Managing Credentials with Google Secret Manager <br>
+Chapter 10: Creating a Local Development Environment <br>
+Chapter 11: Infrastructure as Code with Terraform <br>
+Chapter 12: Continuous Integration with Jenkins <br>
+Chapter 13: Monitoring and Alerting <br>
 Appendix A: Example Code Repository
 
 
@@ -67,5 +68,7 @@ Following the prompts you will create a profile and link it to the Google accoun
 
 You now have access to the `gcloud`, `bq`, and `gsutil` command line tools. `gsutil` is used for managing Google Cloud Storage, `bq` is used for managing BigQuery, and `gcloud` is a general purpose utility. All three will be used within this book.
 
+---
 
+Next Chapter: [Chapter 2: Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_d_orchestration.md) <br>
 
