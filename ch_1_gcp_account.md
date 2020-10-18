@@ -6,7 +6,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 ## Table of Contents
 [Preface](https://github.com/Nunie123/data_engineering_on_gcp_book) <br>
 **Chapter 1: Setting up a GCP Account** <br>
-[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_d_orchestration.md) <br>
+[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_2_orchestration.md) <br>
 [Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md) <br>
 Chapter 4: Building a Data Warehouse with BigQuery <br>
 Chapter 5: Setting up DAGs in Composer and Airflow <br>
