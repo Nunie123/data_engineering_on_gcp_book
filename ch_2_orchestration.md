@@ -1,4 +1,4 @@
-# Data Engineering on the Google Cloud Platform: Start to Finish
+# Up and Running: Data Engineering on the Google Cloud Platform
 The completely free E-Book for setting up and running a Data Engineering stack on Google Cloud Platform.
 
 NOTE: This book is currently incomplete. If you find errors or would like to fill in the gaps, read the [Contributions section](https://github.com/Nunie123/data_engineering_on_gcp_book#user-content-contributions).
@@ -8,7 +8,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_1_gcp_account.md) <br>
 **Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow** <br>
 [Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md) <br>
-Chapter 4: Building a Data Warehouse with BigQuery <br>
+[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
 Chapter 5: Setting up DAGs in Composer and Airflow <br>
 Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions <br>
 Chapter 7: Parallel Processing with DataProc and Spark <br>
@@ -65,6 +65,7 @@ You can set up a Service Account through the Console by selecting the hamburger 
 ![GCP Service Accounts Page](images/gcp_service_accounts_page.png)
 
 Now you'll be prompted for the name of your service account and an optional description. Since this account is going to be for accessing Composer in my Dev environment I named my account "composer-dev". Clicking to the next page prompts us to select a role from a drop-down menu. Select "Cloud Composer" > "Composer Administrator", and then "Continue". We can ignore the last page and select "Done". You will be brought back to the main Service Accounts page, showing all your accounts, including the one you just created. On the account you just created select the three dots on the far right, and then select "Create key". On the menu that pops up select "JSON" and then "CREATE". You will be prompted to download a JSON file. Keep this file safe, as this is your key for accessing Composer.
+
 ![GCP create key menu](images/gcp_create_key.png)
 
 You can also set up a service account through the `gsutil` utility:
@@ -81,15 +82,15 @@ composer-dev                            composer-dev@de-book-dev.iam.gserviceacc
 We can can now set the role for the account by providing the Project, email for the account, and desired role:
 ``` bash
 > gcloud projects add-iam-policy-binding 'de-book-dev' \
-> --member='serviceAccount:composer-dev@de-book-dev.iam.gserviceaccount.com' \
-> --role='roles/composer.admin'
+>   --member='serviceAccount:composer-dev@de-book-dev.iam.gserviceaccount.com' \
+>   --role='roles/composer.admin'
 ```
 Note that we are adding the role using the `gcloud projects` command, not the `gcloud iam service-accounts` command we used to create the role.
 
 Finally, we download the JSON file that is our key:
 ``` bash
 > gcloud iam service-accounts keys create ./keys/my_secret_composer_key.json \
-  --iam-account='composer-dev@de-book-dev.iam.gserviceaccount.com'
+>   --iam-account='composer-dev@de-book-dev.iam.gserviceaccount.com'
 ```
 
 ### Creating the Composer Instance
@@ -192,7 +193,7 @@ Now we need to put our DAG file where our Composer Environment can find it. GCP 
 >   --format="get(config.dagGcsPrefix)"
 gs://us-central1-my-dev-environm-63db6d2e-bucket/dags
 ```
-You can access the bucket with your DAGs just like any other bucket (we talk more about GCS in Chapter 3), but we don't actually need to access the bucket directly to add our DAG. Instead we can the command:
+You can access the bucket with your DAGs just like any other bucket (we talk more about GCS in Chapter 3), but we don't actually need to access the bucket directly to add our DAG. Instead we can use the command:
 ``` bash
 > gcloud composer environments storage dags import \
 >   --environment my-dev-environment \
@@ -207,11 +208,13 @@ Now lets view the Airflow web interface so we can see our DAG running. We can se
 >   --format="get(config.airflowUri)"
 ```
 Copy that address to your browser, and authenticate if required. We'll talk more about the Airflow web interface in Chapter 5. For now lets click on "my_first_dag".
+
 ![Airflow web interface](images/airflow_web_ui_1.png)
+
 From here we can see that our tasks completed successfully.
 
 ### Cleaning Up
-GCP charges us for using the services we set up in this chapter (see their pricing [here]). We will be using this Composer Environment again in Chapter 5, so if you don't feel like setting it up again you can keep it running. Just be aware of your costs for [Composer](https://cloud.google.com/composer/pricing) and [GCS](https://cloud.google.com/storage/pricing). When we set up our Composer Environment GCP also set up resources in GCS for us, which is convenient for setting Airflow up. We just have to remember we have more to shut down than Composer when we are cleaning up.
+GCP charges us for using the services we set up in this chapter. We will be using this Composer Environment again in Chapter 5, so if you don't feel like setting it up again you can keep it running. Just be aware of your costs for [Composer](https://cloud.google.com/composer/pricing) and [GCS](https://cloud.google.com/storage/pricing). When we set up our Composer Environment GCP also set up resources in GCS for us, which is convenient for setting Airflow up. We just have to remember we have more to shut down than Composer when we are cleaning up.
 
 We can delete the Composer Environment by running:
 ``` bash
