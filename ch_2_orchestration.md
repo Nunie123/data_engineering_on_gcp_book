@@ -9,7 +9,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 **Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow** <br>
 [Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md) <br>
 [Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
-Chapter 5: Setting up DAGs in Composer and Airflow <br>
+[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
 Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions <br>
 Chapter 7: Parallel Processing with DataProc and Spark <br>
 Chapter 8: Streaming Data with Pub/Sub <br>
@@ -94,6 +94,8 @@ Finally, we download the JSON file that is our key:
 ```
 
 ### Creating the Composer Instance
+In Chapter 1 I discussed installing the GCP command line tools. You'll need them for this section.
+
 As stated above, a Composer "Environment" is equivalent to a managed Airflow instance. You create an Environment through the [console](https://console.cloud.google.com/composer/environments/create) and through the `gcloud` utility. In Chapter 11 I will go over managing your GCP infrastructure with Terraform, including managing Composer Environments.
 
 We can create a Composer Environment with the following command (WARNING: it can take up to a half hour to create the Environment):

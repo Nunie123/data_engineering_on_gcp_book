@@ -9,7 +9,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_2_orchestration.md) <br>
 **Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)** <br>
 [Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
-Chapter 5: Setting up DAGs in Composer and Airflow <br>
+[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
 Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions <br>
 Chapter 7: Parallel Processing with DataProc and Spark <br>
 Chapter 8: Streaming Data with Pub/Sub <br>
@@ -44,26 +44,28 @@ While Data Lakes are generally considered to be schemaless, there is usually the
 ## Using GCS as a Data Lake
 GCS works well as a Data Lake because it is cheap, easy to access, and integrates well with other GCP services, particularly BigQuery. 
 
-Every file saved in GCS is called an Object (also referred to as a "Blob"). Every Object is contained within a Bucket. Technically, every Object is saved at the top level of the Bucket, there is no hierarchical structure like would be used in a Windows or MacOS file system. However, GCS allows the Buckets to be named as if they are in subdirectories, so for practical purposes we can save files in subdirectories inside a Bucket.
+Every file saved in GCS is called an Object (also referred to as a "Blob"). Every Object is contained within a Bucket. Technically, every Object is saved at the top level of the Bucket. There is no hierarchical structure like would be used in a Windows or MacOS file system. However, GCS allows the Objects to be named as if they are in sub-directories, so for practical purposes we can save files in sub-directories inside a Bucket.
 
 You can manage GCS through the Console, the `gsutil` command line tool, through various code libraries, or through a REST API. I'll discuss `gsutil` and the Python library, since those integrate easiest with Airflow (I'll demonstrate using GCS with Airflow/Composer in Chapter 5).
 
 ### Using the `gsutil` command line tool
+In Chapter 1 I discussed installing the GCP command line tools. You'll need them for this section.
+
 Creating a bucket is quite easy:
 ``` bash
 > gsutil mb gs://de-book-dev
 ```
-The name of a bucket must be unique across all users, so you may find that the bucket name you want to use is not available.
+The name of a Bucket must be unique across all GCP accounts, so you may find that the Bucket name you want to use is not available.
 ``` bash
 > gsutil mb gs://de-book-dev
 Creating gs://de-book-bucket/...
 ServiceException: 409 Bucket de-book-dev already exists.
 ```
-We can see al our buckets by running:
+We can see all our Buckets by running:
 ``` bash
 > gsutil ls
 ```
-Now let's create some files and then copy them into our bucket:
+Now let's create some files and then copy them into our Bucket:
 ``` bash
 > mkdir files
 > echo "This is text" > ./files/a_text_file.txt
@@ -78,9 +80,9 @@ Now let's create some files and then copy them into our bucket:
 The three `cp` commands above demonstrate:
 1. Copying a single file into a Bucket.
 2. Copying an entire directory into a Bucket.
-3. Copying all files with a ".json" extension into a Bucket's sub-folder.
+3. Copying all files with a ".json" extension into a Bucket's sub-directory.
 
-Let's take a look at the Bucket to make sure the objects made it in:
+Let's take a look at the Bucket to make sure the Objects made it in:
 ``` bash
 > gsutil ls gs://de-book-dev
 gs://de-book-dev/a_text_file.txt
@@ -98,7 +100,7 @@ gs://de-book-dev/json_files
 [...]
 ```
 
-We can just as easily use the `cp` command to download the files by switching the source and destination arguments in the examples above. The `cp` command can also be used to copy files between GCS buckets.
+We can just as easily use the `cp` command to download the files from GCS by switching the source and destination arguments in the examples above. The `cp` command can also be used to copy files between GCS buckets.
 
 The [`gsutil rm`](https://cloud.google.com/storage/docs/gsutil/commands/rm) and [`gsutil mv`](https://cloud.google.com/storage/docs/gsutil/commands/mv) commands, among [others](https://cloud.google.com/storage/docs/gsutil/commands/help), are also available for use.
 
@@ -124,9 +126,12 @@ Inside your Python virtual environment run:
 Now we need to configure our credentials. In Chapter 2 we set up a Service Account and generated a secret key. You'll need that service account and key file to continue. You can see all your service accounts with:
 ``` bash
 > gcloud iam service-accounts list
+DISPLAY NAME                            EMAIL                                               DISABLED
+composer-dev                            composer-dev@de-book-dev.iam.gserviceaccount.com    False
+Compute Engine default service account  204024561480-compute@developer.gserviceaccount.com  False
 ```
 
-We now need to give this service account permission to manage GCS:
+We now need to give our composer-dev service account permission to manage GCS:
 ``` bash
 > gcloud projects add-iam-policy-binding 'de-book-dev' \
 >   --member='serviceAccount:composer-dev@de-book-dev.iam.gserviceaccount.com' \
@@ -136,6 +141,8 @@ Finally, we need to set the `GOOGLE_APPLICATION_CREDENTIALS` variable in our she
 ``` bash
 > export GOOGLE_APPLICATION_CREDENTIALS="/path/to/keys/de-book-dev.json"
 ```
+If you like, you can save this variable definition in your .bash_profile file, so that it will be set by default every time your terminal loads.
+
 Now we'll create some handy functions using the [create_bucket()](https://googleapis.dev/python/storage/latest/client.html#google.cloud.storage.client.Client.create_bucket) method from the Client object, and the [upload_from_filename()](https://googleapis.dev/python/storage/latest/blobs.html#google.cloud.storage.blob.Blob.upload_from_filename) method from the Blob object.
 
 
@@ -164,11 +171,13 @@ upload_file_to_bucket('./files/a_text_file.txt', 'de-book-test-bucket', 'my_rena
 Documentation for the Python storage library is [here](https://googleapis.dev/python/storage/latest/client.html).
 
 ### Cleaning Up
-While the [prices] for storage in GCS are pretty cheap, it's still worth cleaning up our buckets. We can see all our buckets with this command:
+While the [prices](https://cloud.google.com/storage/pricing) for storage in GCS are pretty cheap, it's still worth cleaning up our Buckets. We can see all our Buckets with this command:
 ``` bash
 > gsutil ls
+gs://de-book-dev/
+gs://de-book-test-bucket/
 ```
-If you didn't clean up after Chapter 2, you should see some Buckets related to the Composer Environment we set up, in addition to the Buckets we created this Chapter.
+If you didn't clean up after Chapter 2, you should see some Buckets related to the Composer Environment we set up, in addition to the Buckets we created this chapter.
 
 To delete a Bucket and everything inside run:
 ``` bash
