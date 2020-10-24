@@ -10,7 +10,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md) <br>
 **Chapter 4: Building a Data Warehouse with BigQuery** <br>
 [Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
-Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions <br>
+[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
 Chapter 7: Parallel Processing with DataProc and Spark <br>
 Chapter 8: Streaming Data with Pub/Sub <br>
 Chapter 9: Managing Credentials with Google Secret Manager <br>
@@ -42,6 +42,15 @@ While you can do SQL scripting inside the Query Editor, you're going to want to 
 
 ## Using the `bq` Command Line Tool
 In Chapter 1 I discussed installing the GCP command line tools. You'll need them for this section.
+
+We'll also need to give our service account permission to access BigQuery:
+``` bash
+> gcloud projects add-iam-policy-binding 'de-book-dev' \
+   --member='serviceAccount:composer-dev@de-book-dev.iam.gserviceaccount.com' \
+   --role='roles/bigquery.admin'
+[...]
+> export GOOGLE_APPLICATION_CREDENTIALS="/path/to/keys/de-book-dev.json"
+```
 
 ### Creating Tables from the Command Line
 All tables must have a Dataset inside which they can be created. So we start by creating a Dataset, then verifying it was created:
@@ -249,15 +258,6 @@ We can also interact with BigQuery in Python. In Chapter 2 we used the `google.c
 > pip install --upgrade google-cloud-bigquery
 ```
 
-We'll also need to give our service account permission to access BigQuery:
-``` bash
-> gcloud projects add-iam-policy-binding 'de-book-dev' \
-   --member='serviceAccount:composer-dev@de-book-dev.iam.gserviceaccount.com' \
-   --role='roles/bigquery.admin'
-[...]
-> export GOOGLE_APPLICATION_CREDENTIALS="/path/to/keys/de-book-dev.json"
-```
-
 ### Creating Tables from Python
 
 ``` python
@@ -347,6 +347,22 @@ load_json_data(table_id, source_file_location, schema)
 
 ```
 Just like above, we're loading data with a nested field. Unlike the `bq load` command, if you wish to use the BigQuery's Python API to load data into a partitioned table you must create the table with the specified partition first, then load the data.
+
+## Cleaning Up
+Because BigQuery bills based on data processed and storage quantity, rather than uptime, leaving our test data in there from this chapter will incur almost no costs. Nonetheless, it's good to clean up so we can have a blank start when we start creating and loading tables as part of our DAGs in Chapter 5.
+
+Let's start by listing all our datasets:
+``` bash
+> bq ls -d
+my_dataset        
+my_other_dataset  
+```
+
+Now let's delete them. We use the `-r` flag to indicate we also want the associated tables deleted:
+``` bash
+> bq rm -d -r my_dataset
+> bq rm -d -r my_other_dataset
+```
 
 ---
 
