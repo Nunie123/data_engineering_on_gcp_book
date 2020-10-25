@@ -11,7 +11,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 **Chapter 4: Building a Data Warehouse with BigQuery** <br>
 [Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
 [Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-Chapter 7: Parallel Processing with DataProc and Spark <br>
+[Chapter 7: Parallel Processing with DataProc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
 Chapter 8: Streaming Data with Pub/Sub <br>
 Chapter 9: Managing Credentials with Google Secret Manager <br>
 Chapter 10: Creating a Local Development Environment <br>
@@ -327,7 +327,7 @@ def load_json_data(table_id: str, source_file_location: str, schema: list) -> No
             table_id,
             job_config=job_config,
         )
-    load_job.result()
+        load_job.result()
 
 table_id = 'de-book-dev.my_other_dataset.products'
 source_file_location = 'products.json'

@@ -11,7 +11,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
 [Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
 [Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-Chapter 7: Parallel Processing with DataProc and Spark <br>
+[Chapter 7: Parallel Processing with DataProc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
 Chapter 8: Streaming Data with Pub/Sub <br>
 Chapter 9: Managing Credentials with Google Secret Manager <br>
 Chapter 10: Creating a Local Development Environment <br>
@@ -68,7 +68,38 @@ Following the prompts you will create a profile and link it to the Google accoun
 
 You now have access to the `gcloud`, `bq`, and `gsutil` command line tools. `gsutil` is used for managing Google Cloud Storage, `bq` is used for managing BigQuery, and `gcloud` is a general purpose utility. All three will be used within this book.
 
+### Setting up a Service Account
+We'll be using a Service Account to authenticate with GCP. You can set up a Service Account through the Console by selecting the hamburger menu in the upper-left, then going to "IAM & Admin" > "Service Accounts". From this page select "CREATE SERVICE ACCOUNT" at the top.
+
+![GCP Service Accounts Page](images/gcp_service_accounts_page.png)
+
+Now you'll be prompted for the name of your service account and an optional description. Since this account is going to be for accessing Composer in my Dev environment I named my account "composer-dev". Clicking to the next page prompts us to select a role from a drop-down menu. Select "Cloud Composer" > "Composer Administrator", and then "Continue". We can ignore the last page and select "Done". You will be brought back to the main Service Accounts page, showing all your accounts, including the one you just created. On the account you just created select the three dots on the far right, and then select "Create key". On the menu that pops up select "JSON" and then "CREATE". You will be prompted to download a JSON file. Keep this file safe, as this is your key for accessing Composer.
+
+![GCP create key menu](images/gcp_create_key.png)
+
+You can also set up a service account through the `gsutil` utility:
+``` bash
+> gcloud iam service-accounts create 'composer-dev'
+```
+In order to set up a role for this account you'll need it's emails, which can found with:
+``` bash
+> gcloud iam service-accounts list
+DISPLAY NAME                            EMAIL                                               DISABLED
+composer-dev                            composer-dev@de-book-dev.iam.gserviceaccount.com    False
+```
+
+Finally, we download the JSON file that is our key:
+``` bash
+> gcloud iam service-accounts keys create ./keys/my_secret_composer_key.json \
+>   --iam-account='composer-dev@de-book-dev.iam.gserviceaccount.com'
+```
+
+Now that we have our key saved locally we can define a variable in our shell so our command line tools can find our key:
+``` bash
+> export GOOGLE_APPLICATION_CREDENTIALS="/path/to/keys/de-book-dev.json"
+```
+This variable will only last as long as your terminal session. Every time you open a new terminal session and plan to use the GCP command line tools you should start by running the above command.
+
 ---
 
 Next Chapter: [Chapter 2: Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_d_orchestration.md) <br>
-

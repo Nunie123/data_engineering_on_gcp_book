@@ -11,7 +11,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
 [Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
 [Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-Chapter 7: Parallel Processing with DataProc and Spark <br>
+[Chapter 7: Parallel Processing with DataProc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
 Chapter 8: Streaming Data with Pub/Sub <br>
 Chapter 9: Managing Credentials with Google Secret Manager <br>
 Chapter 10: Creating a Local Development Environment <br>
@@ -55,46 +55,15 @@ The rest of this chapter will be dedicated to setting up your own Cloud Composer
 ## Setting up Cloud Composer on GCP
 Apache Airflow, whether installed yourself or managed by GCP, requires a collection of infrastructure pieces that coordinate to make the application work. GCP calls an Airflow instance an "Environment" because what you are launching is the environment for all these pieces to work together. Cloud Composer uses the following GCP services to run: Cloud SQL, App Engine, Cloud Storage, Kubernetes Engine, Cloud Logging, Cloud Monitoring, and Pub/Sub. Fortunately GCP handles all that infrastructure for us.
 
+### Creating the Composer Instance
+In Chapter 1 I discussed installing the GCP command line tools. You'll need them for this section.
 
-### Setting up a Service Account
-
-You're first step is to enable Cloud Composer, which you can do [here](https://console.cloud.google.com/flows/enableapi?apiid=composer.googleapis.com). Select your Project from the drop-down and click "Continue". You'll be taken to a page prompting you to set up your credentials. GCP is reminding you that you should set up a Service Account that will allow you to access the Composer API that you just enabled.
-
-You can set up a Service Account through the Console by selecting the hamburger menu in the upper-left, then going to "IAM & Admin" > "Service Accounts". From this page select "CREATE SERVICE ACCOUNT" at the top.
-
-![GCP Service Accounts Page](images/gcp_service_accounts_page.png)
-
-Now you'll be prompted for the name of your service account and an optional description. Since this account is going to be for accessing Composer in my Dev environment I named my account "composer-dev". Clicking to the next page prompts us to select a role from a drop-down menu. Select "Cloud Composer" > "Composer Administrator", and then "Continue". We can ignore the last page and select "Done". You will be brought back to the main Service Accounts page, showing all your accounts, including the one you just created. On the account you just created select the three dots on the far right, and then select "Create key". On the menu that pops up select "JSON" and then "CREATE". You will be prompted to download a JSON file. Keep this file safe, as this is your key for accessing Composer.
-
-![GCP create key menu](images/gcp_create_key.png)
-
-You can also set up a service account through the `gsutil` utility:
-``` bash
-> gcloud iam service-accounts create 'composer-dev'
-```
-In order to set up a role for this account you'll need it's emails, which can found with:
-``` bash
-> gcloud iam service-accounts list
-DISPLAY NAME                            EMAIL                                               DISABLED
-composer-dev                            composer-dev@de-book-dev.iam.gserviceaccount.com    False
-```
-
-We can can now set the role for the account by providing the Project, email for the account, and desired role:
+You're first step is to enable Cloud Composer, which you can do [here](https://console.cloud.google.com/flows/enableapi?apiid=composer.googleapis.com). Select your Project from the drop-down and click "Continue". You'll be taken to a page prompting you to set up your credentials. GCP is reminding you that you should set up a Service Account that will allow you to access the Composer API that you just enabled. We already set up our Service Account in Chapter 1, but now we can grant the Service Account permission to set up a Compose Environment:
 ``` bash
 > gcloud projects add-iam-policy-binding 'de-book-dev' \
 >   --member='serviceAccount:composer-dev@de-book-dev.iam.gserviceaccount.com' \
 >   --role='roles/composer.worker'
 ```
-Note that we are adding the role using the `gcloud projects` command, not the `gcloud iam service-accounts` command we used to create the role.
-
-Finally, we download the JSON file that is our key:
-``` bash
-> gcloud iam service-accounts keys create ./keys/my_secret_composer_key.json \
->   --iam-account='composer-dev@de-book-dev.iam.gserviceaccount.com'
-```
-
-### Creating the Composer Instance
-In Chapter 1 I discussed installing the GCP command line tools. You'll need them for this section.
 
 As stated above, a Composer "Environment" is equivalent to a managed Airflow instance. You create an Environment through the [console](https://console.cloud.google.com/composer/environments/create) and through the `gcloud` utility. In Chapter 11 I will go over managing your GCP infrastructure with Terraform, including managing Composer Environments.
 
@@ -215,7 +184,7 @@ Copy that address to your browser, and authenticate if required. We'll talk more
 
 From here we can see that our tasks completed successfully.
 
-### Cleaning Up
+## Cleaning Up
 GCP charges us for using the services we set up in this chapter. We will be using this Composer Environment again in Chapter 5, so if you don't feel like setting it up again you can keep it running. Just be aware of your costs for [Composer](https://cloud.google.com/composer/pricing) and [GCS](https://cloud.google.com/storage/pricing). When we set up our Composer Environment GCP also set up resources in GCS for us, which is convenient for setting Airflow up. We just have to remember we have more to shut down than Composer when we are cleaning up.
 
 We can delete the Composer Environment by running:
