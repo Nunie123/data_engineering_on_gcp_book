@@ -11,8 +11,8 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
 [Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
 **Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions** <br>
-[Chapter 7: Parallel Processing with DataProc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
-Chapter 8: Streaming Data with Pub/Sub <br>
+[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
+[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
 Chapter 9: Managing Credentials with Google Secret Manager <br>
 Chapter 10: Creating a Local Development Environment <br>
 Chapter 11: Infrastructure as Code with Terraform <br>
@@ -25,7 +25,7 @@ Appendix A: Example Code Repository
 
 # Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions
 
-In Chapter 5 I demonstrated how to set up a Data Pipeline that ran on a schedule (or by manually triggering through the Web UI). Airflow has a lot of flexibility in when and how often a DAG should run, but sometimes you don't want your DAG to run on a schedule. Suppose your organizations Data Science team periodically generates a CSV file with valuable information, and you want to ingest that file into your Data Warehouse as soon as it is possible. You can't ingest on a schedule, because you don't know when the file will be uploaded. What we can do instead is set up a Cloud Function to listen for a new file to be uploaded, and once a new file is detected it can kick off the Data Pipeline for ingesting that file.
+In Chapter 5 I demonstrated how to set up a Data Pipeline that ran on a schedule (or by manually triggering through the Web UI). Airflow has a lot of flexibility for when and how often a DAG should run, but sometimes you don't want your DAG to run on a schedule. Suppose your organization's Data Science team periodically generates a CSV file with valuable information, and you want to ingest that file into your Data Warehouse as soon as it is available. You can't ingest on a schedule, because you don't know when the file will be uploaded. What we can do instead is set up a Cloud Function to listen for a new file to be uploaded, and once a new file is detected it can kick off the Data Pipeline for ingesting that file.
 
 ## Overview of Cloud Functions
 GCP's Cloud Functions is a "serverless" code execution service. It allows predefined code to be executed when triggered by an event, such as GCS events, HTTP events, and Pub/Sub events. We'll focus on GCS events in this chapter, as responding to a new file being uploaded to a GCS Bucket is a common task for Data Engineers, but Cloud Functions has much more functionality than what I'll cover. Additionally, I'll talk about Pub/Sub in Chapter 8 as I discuss streaming Data Pipelines.
@@ -79,13 +79,17 @@ def load_to_bq(event, context):
         )
     load_job.result()
 ```
+In the above function we used the library `google.cloud.bigquery`, which means we'll need to install it into our environment. Fortunately, we can simply create a `requirements.txt` file in the same directory as our `main.py` file:
+``` text
+google-cloud-bigquery==2.2.0
+```
 
 Now let's deploy the function. When we run the below command we should be in the same directory as the `main.py` file. It may take a few minutes for the function to deploy.
 ``` bash
 > gcloud functions deploy load_to_bq \
->   --runtime python37 \
->   --trigger-resource gs://de-book-trigger-function \
->   --trigger-event google.storage.object.finalize
+    --runtime python37 \
+    --trigger-resource gs://de-book-trigger-function \
+    --trigger-event google.storage.object.finalize
 ```
 
 ### Testing the Cloud Function
@@ -106,13 +110,22 @@ Now we can upload the file to our Bucket and trigger our function:
 If all went as planned we should now see our data in our table:
 ``` bash
 > bq query 'select * from food.food_ranks'
++---------------+---------+
+|   food_name   | ranking |
++---------------+---------+
+| pizza         |       1 |
+| cheeseburgers |       2 |
+| hot dogs      |       3 |
+| nachos        |       4 |
+| tacos         |       5 |
++---------------+---------+
 ```
 
 ### Combining Cloud Functions with Composer
-One architecture that can work well is having all of your batch pipelines managed by Composer. In the above Cloud Function we loaded the data directly into BigQuery using the `google.cloud.bigquery` Python library. However, another option would be to have the Cloud Function trigger a DAG, which will then perform the loading and transformation Tasks. You can read more about setting up a Cloud Function to trigger a DAG [here](https://cloud.google.com/composer/docs/how-to/using/triggering-with-gcf).
+One architecture design that can work well is having all of your batch pipelines managed by Composer. In the above Cloud Function we loaded the data directly into BigQuery using the `google.cloud.bigquery` Python library. However, another option would be to have the Cloud Function trigger a DAG, which will then perform the loading and transformation Tasks. You can read more about setting up a Cloud Function to trigger a DAG [here](https://cloud.google.com/composer/docs/how-to/using/triggering-with-gcf).
 
 ### Cleaning Up
-Cloud Function [pricing](https://cloud.google.com/functions/pricing) is done by use, so our work this chapter is not breaking the bank. Nonetheless, it's good to take down what you're not using. Note that the Cloud Functions service created some storage buckets for it to use that should also be removed.
+Cloud Function [pricing](https://cloud.google.com/functions/pricing) is done by use, so our work this chapter is not breaking the bank. Nonetheless, it's good to take down what you're not using. Note that the Cloud Functions service created some storage buckets for it to use, in addition to the Bucket we created, that should also be removed.
 ``` bash
 > gcloud functions delete load_to_bq 
 

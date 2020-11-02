@@ -11,8 +11,8 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 **Chapter 4: Building a Data Warehouse with BigQuery** <br>
 [Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
 [Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-[Chapter 7: Parallel Processing with DataProc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
-Chapter 8: Streaming Data with Pub/Sub <br>
+[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
+[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
 Chapter 9: Managing Credentials with Google Secret Manager <br>
 Chapter 10: Creating a Local Development Environment <br>
 Chapter 11: Infrastructure as Code with Terraform <br>
@@ -119,7 +119,7 @@ You can also define a new table by making based on a query from an existing tabl
 Finally, you can create a new table as part of the `bq load` command. I'll talk more about loading data in the next section.
 ``` bash
 > bq load \
->   --source_format=NEWLINE_DELIMITED_JSON \
+    --source_format=NEWLINE_DELIMITED_JSON \
 >   my_dataset.my_table \
 >   gs://path/to/blob/in/bucket/file.json \
 >   my_schema.json
@@ -230,10 +230,10 @@ You'll notice that this schema defines a nested field, called a "REPEATED" field
 Now that we have our schema file, let's load our data.
 ``` bash
 > bq load \
->   --source_format=NEWLINE_DELIMITED_JSON \
->   --replace \
->   --time_partitioning_type=DAY \
->   --time_partitioning_field created_on \
+    --source_format=NEWLINE_DELIMITED_JSON \
+    --replace \
+    --time_partitioning_type=DAY \
+    --time_partitioning_field created_on \
 >   my_dataset.products \
 >   products.jsonl \
 >   products_schema.json

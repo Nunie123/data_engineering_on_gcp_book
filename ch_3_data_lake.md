@@ -11,8 +11,8 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
 [Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
 [Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-[Chapter 7: Parallel Processing with DataProc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
-Chapter 8: Streaming Data with Pub/Sub <br>
+[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
+[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
 Chapter 9: Managing Credentials with Google Secret Manager <br>
 Chapter 10: Creating a Local Development Environment <br>
 Chapter 11: Infrastructure as Code with Terraform <br>
@@ -134,8 +134,8 @@ Compute Engine default service account  204024561480-compute@developer.gservicea
 We now need to give our composer-dev service account permission to manage GCS:
 ``` bash
 > gcloud projects add-iam-policy-binding 'de-book-dev' \
->   --member='serviceAccount:composer-dev@de-book-dev.iam.gserviceaccount.com' \
->   --role='roles/storage.admin'
+    --member='serviceAccount:composer-dev@de-book-dev.iam.gserviceaccount.com' \
+    --role='roles/storage.admin'
 ```
 Finally, we need to set the `GOOGLE_APPLICATION_CREDENTIALS` variable in our shell, referencing our secret key file that we saved in Chapter 2:
 ``` bash

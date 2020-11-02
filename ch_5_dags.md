@@ -11,8 +11,8 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
 **Chapter 5: Setting up DAGs in Composer and Airflow** <br>
 [Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-[Chapter 7: Parallel Processing with DataProc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
-Chapter 8: Streaming Data with Pub/Sub <br>
+[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
+[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
 Chapter 9: Managing Credentials with Google Secret Manager <br>
 Chapter 10: Creating a Local Development Environment <br>
 Chapter 11: Infrastructure as Code with Terraform <br>
@@ -38,13 +38,13 @@ First, we need to make sure GCP uses our service account:
 The Composer Environment can take a good while to spin up after we issue the command, so we'll start that first:
 ``` bash
 > gcloud composer environments create bitcoin-dev \
->   --location us-central1 \
->   --zone us-central1-f \
->   --machine-type n1-standard-1 \
->   --image-version composer-1.12.2-airflow-1.10.10 \
->   --python-version 3 \
->   --node-count 3 \
->   --service-account composer-dev@de-book-dev.iam.gserviceaccount.com 
+    --location us-central1 \
+    --zone us-central1-f \
+    --machine-type n1-standard-1 \
+    --image-version composer-1.12.2-airflow-1.10.10 \
+    --python-version 3 \
+    --node-count 3 \
+    --service-account composer-dev@de-book-dev.iam.gserviceaccount.com 
 ```
 For more details on setting up a Composer Environment check out Chapter 2.
 
@@ -467,15 +467,15 @@ t_update_currencies_table.set_upstream([t_create_currencies_table, t_load_data_i
 So now we have our DAG file (`coin_gecko.py`), our schema file (`coin_gecko_schema.json`) and our sql file (`currencies.sql`). Our next step is to get them deployed to Composer. We'll talk about deployment pipelines in Chapter 12, but for now we can deploy through the command line:
 ``` bash
 > gcloud composer environments storage dags import \
->   --environment bitcoin-dev \
->   --location us-central1 \
->   --source coin_gecko.py
+    --environment bitcoin-dev \
+    --location us-central1 \
+    --source coin_gecko.py
 ```
 To deploy our JSON and SQL files we'll need to identify the name of the Bucket. Once we know that we can copy our files over:
 ``` bash
 > gcloud composer environments describe bitcoin-dev \
->   --location us-central1 \
->   --format="get(config.dagGcsPrefix)"
+    --location us-central1 \
+    --format="get(config.dagGcsPrefix)"
 gs://us-central1-bitcoin-dev-123abc-bucket/dags
 
 > gsutil cp coin_gecko_schema.json gs://us-central1-bitcoin-dev-3d3132eb-bucket/dags/schemas/

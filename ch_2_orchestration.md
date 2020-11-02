@@ -11,8 +11,8 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
 [Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
 [Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-[Chapter 7: Parallel Processing with DataProc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
-Chapter 8: Streaming Data with Pub/Sub <br>
+[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
+[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
 Chapter 9: Managing Credentials with Google Secret Manager <br>
 Chapter 10: Creating a Local Development Environment <br>
 Chapter 11: Infrastructure as Code with Terraform <br>
@@ -55,14 +55,16 @@ The rest of this chapter will be dedicated to setting up your own Cloud Composer
 ## Setting up Cloud Composer on GCP
 Apache Airflow, whether installed yourself or managed by GCP, requires a collection of infrastructure pieces that coordinate to make the application work. GCP calls an Airflow instance an "Environment" because what you are launching is the environment for all these pieces to work together. Cloud Composer uses the following GCP services to run: Cloud SQL, App Engine, Cloud Storage, Kubernetes Engine, Cloud Logging, Cloud Monitoring, and Pub/Sub. Fortunately GCP handles all that infrastructure for us.
 
+It's also important to be aware that unlike some other services by GCP, Composer does not auto-scale. You are required to designate the number and size of the machines you want to use, with more compute power assigned meaning an increased bill from GCP. If you need to change your assigned compute power you must do so manually.
+
 ### Creating the Composer Instance
 In Chapter 1 I discussed installing the GCP command line tools. You'll need them for this section.
 
 You're first step is to enable Cloud Composer, which you can do [here](https://console.cloud.google.com/flows/enableapi?apiid=composer.googleapis.com). Select your Project from the drop-down and click "Continue". You'll be taken to a page prompting you to set up your credentials. GCP is reminding you that you should set up a Service Account that will allow you to access the Composer API that you just enabled. We already set up our Service Account in Chapter 1, but now we can grant the Service Account permission to set up a Compose Environment:
 ``` bash
 > gcloud projects add-iam-policy-binding 'de-book-dev' \
->   --member='serviceAccount:composer-dev@de-book-dev.iam.gserviceaccount.com' \
->   --role='roles/composer.worker'
+    --member='serviceAccount:composer-dev@de-book-dev.iam.gserviceaccount.com' \
+    --role='roles/composer.worker'
 ```
 
 As stated above, a Composer "Environment" is equivalent to a managed Airflow instance. You create an Environment through the [console](https://console.cloud.google.com/composer/environments/create) and through the `gcloud` utility. In Chapter 11 I will go over managing your GCP infrastructure with Terraform, including managing Composer Environments.
@@ -70,13 +72,13 @@ As stated above, a Composer "Environment" is equivalent to a managed Airflow ins
 We can create a Composer Environment with the following command (WARNING: it can take up to a half hour to create the Environment):
 ``` bash
 > gcloud composer environments create my-dev-environment \
->   --location us-central1 \
->   --zone us-central1-f \
->   --machine-type n1-standard-1 \
->   --image-version composer-1.12.2-airflow-1.10.10 \
->   --python-version 3 \
->   --node-count 3 \
->   --service-account composer-dev@de-book-dev.iam.gserviceaccount.com 
+    --location us-central1 \
+    --zone us-central1-f \
+    --machine-type n1-standard-1 \
+    --image-version composer-1.12.2-airflow-1.10.10 \
+    --python-version 3 \
+    --node-count 3 \
+    --service-account composer-dev@de-book-dev.iam.gserviceaccount.com 
 ```
 I've specified a few common options, but there are many more options that you can read about [here](https://cloud.google.com/composer/docs/how-to/managing/creating?authuser=1#gcloud).
 
@@ -160,23 +162,23 @@ t_print_message.set_upstream(t_get_product_data)
 Now we need to put our DAG file where our Composer Environment can find it. GCP handles this by sticking all of the DAGs in a GCS bucket. We can find the bucket by running:
 ``` bash
 > gcloud composer environments describe my-dev-environment \
->   --location us-central1 \
->   --format="get(config.dagGcsPrefix)"
+    --location us-central1 \
+    --format="get(config.dagGcsPrefix)"
 gs://us-central1-my-dev-environm-63db6d2e-bucket/dags
 ```
 You can access the bucket with your DAGs just like any other bucket (we talk more about GCS in Chapter 3), but we don't actually need to access the bucket directly to add our DAG. Instead we can use the command:
 ``` bash
 > gcloud composer environments storage dags import \
->   --environment my-dev-environment \
->   --location us-central1 \
->   --source my_first_dag.py
+    --environment my-dev-environment \
+    --location us-central1 \
+    --source my_first_dag.py
 ```
 
 Now lets view the Airflow web interface so we can see our DAG running. We can see the address by running:
 ``` bash
 > gcloud composer environments describe my-dev-environment \
->   --location us-central1 | \
->   --format="get(config.airflowUri)"
+    --location us-central1 | \
+    --format="get(config.airflowUri)"
 ```
 Copy that address to your browser, and authenticate if required. We'll talk more about the Airflow web interface in Chapter 5. For now lets click on "my_first_dag".
 
