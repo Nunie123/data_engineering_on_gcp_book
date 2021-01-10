@@ -13,7 +13,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
 [Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
 [Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
-Chapter 9: Managing Credentials with Google Secret Manager <br>
+[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
 Chapter 10: Creating a Local Development Environment <br>
 Chapter 11: Infrastructure as Code with Terraform <br>
 Chapter 12: Continuous Integration with Jenkins <br>
@@ -104,7 +104,7 @@ We can just as easily use the `cp` command to download the files from GCS by swi
 
 The [`gsutil rm`](https://cloud.google.com/storage/docs/gsutil/commands/rm) and [`gsutil mv`](https://cloud.google.com/storage/docs/gsutil/commands/mv) commands, among [others](https://cloud.google.com/storage/docs/gsutil/commands/help), are also available for use.
 
-One command we should discuss that isn't based on a UNIX command like `cp` is the [`gsutil rsync`](https://cloud.google.com/storage/docs/gsutil/commands/rsync) command. Using `rsync` on a local folder will ensure that any file added to that folder is also added to the designated Bucket:
+One command we should discuss that isn't based on a UNIX command like `cp` is the [`gsutil rsync`](https://cloud.google.com/storage/docs/gsutil/commands/rsync) command. Using `rsync` on a local folder will ensure that any file in that folder is also added to the designated Bucket, if it doesn't yet exist there:
 ``` bash
 > gsutil rsync ./files gs://de-book-dev/synced_files/
 ```

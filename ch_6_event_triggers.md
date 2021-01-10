@@ -13,7 +13,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 **Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions** <br>
 [Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
 [Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
-Chapter 9: Managing Credentials with Google Secret Manager <br>
+[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
 Chapter 10: Creating a Local Development Environment <br>
 Chapter 11: Infrastructure as Code with Terraform <br>
 Chapter 12: Continuous Integration with Jenkins <br>
@@ -137,9 +137,10 @@ gs://gcf-sources-204024561480-us-central1/
 gs://us.artifacts.de-book-dev.appspot.com/
 
 > gsutil rm -r gs://de-book-trigger-function
-> gsutil rm -r gs://gcf-sources-204024561480-us-central1/
 > gsutil rm -r gs://us.artifacts.de-book-dev.appspot.com/
 ```
+
+A note about `gs://gcf-sources-204024561480-us-central1`: This bucket is used as the location where Cloud Functions are deployed in GCP. It takes the format "gcf-sources-<PROJECT_NUMBER>-<REGION>. If you delete this bucket, you may find that future deployments of Cloud Functions fail. You can manually create a bucket with this name to resolve the issue.
 
 ---
 
