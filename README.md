@@ -14,10 +14,9 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
 [Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
 [Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
-Chapter 10: Creating a Local Development Environment <br>
-Chapter 11: Infrastructure as Code with Terraform <br>
-Chapter 12: Continuous Integration with Jenkins <br>
-Chapter 13: Monitoring and Alerting <br>
+[Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md)
+Chapter 11: Continuous Integration with Jenkins <br>
+Chapter 12: Monitoring and Alerting <br>
 Appendix A: Example Code Repository
 
 
@@ -49,7 +48,10 @@ If you're looking to use this book as a guid to set up your Data Engineering inf
 
 Likely, many people will find their way to this book trying to solve a specific problem (e.g. how to set up alerting on GCP's Composer/Airflow service). For these people I've tried to make each chapter as self-contained as possible. When I use infrastructure created in a previous chapter I'll always provide a link to the previous chapter where it's explained.
 
-The best way to learn is by doing, which is why each chapter provides code samples. I encourage you to build this infrastructure with me, as you read through the chapters. Included with this book in **Appendix A** I've provided an example of what your infrastructure as code will look like.
+The best way to learn is by doing, which is why each chapter provides code samples. I encourage you to build this infrastructure with me, as you read through the chapters. Included with this book in Appendix A I've provided an example of what your infrastructure as code will look like.
+
+## A Note About the Code in the Book
+The code within the chapters is for demonstration purposes, and is not necessarily in the format you should be running in production. For the sake of clarity and brevity the code usually omits good practices such as type hinting, validation, error handling, and docstrings. If you want a better sense of what production-ready code looks like, review the code in Appendix A.
 
 ## Contributions
 

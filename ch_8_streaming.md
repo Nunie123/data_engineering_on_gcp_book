@@ -14,10 +14,9 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
 **Chapter 8: Streaming Data with Pub/Sub** <br>
 [Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
-Chapter 10: Creating a Local Development Environment <br>
-Chapter 11: Infrastructure as Code with Terraform <br>
-Chapter 12: Continuous Integration with Jenkins <br>
-Chapter 13: Monitoring and Alerting <br>
+[Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md)
+Chapter 11: Continuous Integration with Jenkins <br>
+Chapter 12: Monitoring and Alerting <br>
 Appendix A: Example Code Repository
 
 

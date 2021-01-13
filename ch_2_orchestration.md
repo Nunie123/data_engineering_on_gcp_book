@@ -14,10 +14,9 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
 [Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
 [Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
-Chapter 10: Creating a Local Development Environment <br>
-Chapter 11: Infrastructure as Code with Terraform <br>
-Chapter 12: Continuous Integration with Jenkins <br>
-Chapter 13: Monitoring and Alerting <br>
+[Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md)
+Chapter 11: Continuous Integration with Jenkins <br>
+Chapter 12: Monitoring and Alerting <br>
 Appendix A: Example Code Repository
 
 
@@ -48,7 +47,7 @@ Whole [books](https://www.manning.com/books/data-pipelines-with-apache-airflow) 
 
 Cloud Composer is Google's fully managed Airflow service. So rather than renting compute instances and installing Airflow yourself, Composer manages the compute instances for you under the hood. 
 
-While offloading some of DevOps work to GCP is nice, it does provide a complication: Because GCP is a managed service, you are not able to run it locally. So your options are to create a composer instance on GCP for every developer, or set up a dockerized Airflow instance to run locally for development. In Chapter 10 we'll discuss setting up a local environment for development.
+While offloading some of DevOps work to GCP is nice, it does provide a complication: Because GCP is a managed service, you are not able to run it locally. So your options are to create a composer instance on GCP for every developer, or set up a dockerized Airflow instance to run locally for development.
 
 The rest of this chapter will be dedicated to setting up your own Cloud Composer instance on GCP.
 
@@ -96,7 +95,7 @@ To verify your Environment is running you can execute:
 ### Testing a DAG
 The point of the Airflow instance is to orchestrate your DAGs, which is how you'll organize your batch data processing. I'll be talking a lot more about how to make DAGs in Chapter 5 (after we talk about GCS and BigQuery), but I'll go over a quick example here.
 
-A DAG is defined in a Python file that Airflow monitors and executes when scheduled. We'll create a DAG that has two tasks: one task will download a list of (mock) products and the other task will print a message indicating the task completed. In Chapter 10 I'll show you how to develop and test DAGs locally, but for now we can just make the file and upload it to be run on GCP. So let's make our Python file:
+A DAG is defined in a Python file that Airflow monitors and executes when scheduled. We'll create a DAG that has two tasks: one task will download a list of (mock) products and the other task will print a message indicating the task completed. In Chapter 11 I will discuss how to automate the deployment of these files to GCP, where they will run, but for now we can do that manually. So let's make our Python file:
 ``` python
 # my_first_dag.py
 
