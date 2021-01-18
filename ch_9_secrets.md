@@ -14,8 +14,8 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
 [Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
 **Chapter 9: Managing Credentials with Google Secret Manager** <br>
-[Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md)
-Chapter 11: Continuous Integration with Jenkins <br>
+[Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md) <br>
+[Chapter 11: Continuous Integration with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_continuous_integration.md) <br>
 Chapter 12: Monitoring and Alerting <br>
 Appendix A: Example Code Repository
 
@@ -24,7 +24,7 @@ Appendix A: Example Code Repository
 
 # Chapter 9: Managing Credentials with Google Secret Manager
 
-There will likely be times where you are going to need to give your data pipelines access to credentials. For GCP resources we can manage access through permissions on our service accounts, but often your pipeline will need to access systems outside of GCP. By using Google Secrets Manager we are able to securely store passwords and other secret information.
+There will likely be times where you are going to need to give your data pipelines access to credentials. For GCP resources we can manage access through permissions on our service accounts, but often your pipeline will need to access systems outside of GCP. By using Google Secret Manager we are able to securely store passwords and other secret information.
 
 In this chapter I will show you how to create and access secrets using Google Secret Manager. Then we'll create an Airflow DAG that will simulate making an HTTP request to a secured web API, then saving the results to GCS.
 
@@ -36,7 +36,7 @@ The first thing we need to do is enable the Google Secret Manager service:
 
 Creating a secret is quite simple. Here I'm creating a secret called "source-api-password" that contains the value "abc123":
 ``` Bash
-> echo -n "abc1234" | gcloud secrets create source-api-password --data-file=-
+> echo -n "abc123" | gcloud secrets create source-api-password --data-file=-
 ```
 
 We can also create a secret where the value is the contents of a file:
@@ -71,7 +71,7 @@ plaintext_secret = get_secret(project, secret_name, version)
 ```
 
 ## Using Google Secret Manager in Airflow
-Below is an example of how you might typically use Google Secret Manager to access secrets within your DAG for getting data from a web API. The web API in this example doesn't exist, but the below code shows you a common type of DAG that would require accessing a secret.
+Below is an example of how you might typically use Google Secret Manager to access secrets within your DAG for getting data from a web API. The web API in this example doesn't exist (so it won't work if you run it unmodified in your own Airflow instance), but the below code shows you a common type of DAG that would require accessing a secret.
 
 ``` Python
 import requests
