@@ -15,8 +15,9 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
 [Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
 **Chapter 10: Infrastructure as Code with Terraform** <br>
-[Chapter 11: Continuous Integration with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_continuous_integration.md) <br>
-Chapter 12: Monitoring and Alerting <br>
+[Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) <br>
+[Chapter 12: Monitoring and Alerting](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md) <br>
+Chapter 13: Start to Finish - Building a Complete Data Engineering Infrastructure <br>
 Appendix A: Example Code Repository
 
 
@@ -24,11 +25,11 @@ Appendix A: Example Code Repository
 
 # Chapter 10: Infrastructure as Code with Terraform
 
-Much of a Data Engineer's responsibility is to manage their tools. So far in this book we've discussed Composer, GCS, BigQuery, Cloud Functions, Dataproc, Pub/Sub, and Secret Manager. We've been managing these resources through command line scripts, which is useful learning, but not a good way to handle your production environment. We want to define these resources in text files and have those files in source control. This is called Infrastructure as Code.
+Much of a Data Engineer's responsibility is to manage their tools. So far in this book we've discussed Composer, GCS, BigQuery, Cloud Functions, Dataproc, Pub/Sub, and Secret Manager. We've been managing these resources through command line scripts, which is useful for learning, but not a good way to handle your production environment. We want to define these resources in text files and have those files in source control. This is called Infrastructure as Code.
 
 Terraform is a tool that allows you to define your infrastructure, and the various permissions to access that infrastructure, in a series of configuration files. Terraform is not owned or managed by Google, but it does work well with GCP.
 
-However, because this is not a GCP service we'll be running Terraform on our local machine.
+Terraform is not a GCP service, so we'll be running Terraform on our local machine.
 
 ## Installing Terraform
 If you're on a Mac, Terraform can easily be installed through [Homebrew](https://brew.sh/):
@@ -44,14 +45,14 @@ If you want to enable auto-complete for Terraform on your bash or zsh shell, the
 > terraform -install-autocomplete
 ```
 
-That's it. We now have Terraform on our local machine. Next we'll create some configuration files to define out infrastructure.
+That's it. We now have Terraform on our local machine. Next we'll create some configuration files to define our infrastructure.
 ## Creating Your Configuration Files
 One of the main benefits of using Terraform, or Infrastructure as Code more generally, is the ability to define our infrastructure in a way that allows us to put it into source control. In this section we'll be writing the configuration files that will go into our source control (e.g. git).
 
 While Terraform allows you to get sophisticated in your setup, it also allows you to get up and running with minimal code. Let's create our `main.tf` file:
 
-``` yaml
-# This "terraform block" tells Terraform it will need to look in the google registry when identifying which resources to deploy
+``` JS
+// This "terraform block" tells Terraform it will need to look in the google registry when identifying which resources to deploy
 terraform {
     required_providers {
         google = {
@@ -61,7 +62,7 @@ terraform {
     }
 }
 
-# This "provider block" configures your google account.
+// This "provider block" configures your google account.
 provider "google" {
     credentials = file("../keys/de-book-dev-secret-key.json") # provide the file path to your GCP secret key file
     project = "de-book-dev"
@@ -69,7 +70,7 @@ provider "google" {
     zone    = "us-central1-c"
 }
 
-# This "resource block" configures the specific infrastructure you wish to deploy
+// This "resource block" configures the specific infrastructure you wish to deploy
 resource "google_storage_bucket" "de-book-terraform-test" {
     name = "de-book-terraform-test-1234567654321"   # This is the name of the bucket to be created
     location = "US"
@@ -88,7 +89,7 @@ While our infrastructure configuration files, like the one above, should go into
 ```
 
 ## Deploying Your Infrastructure to GCP
-Now that we've defined our infrastructure, let's deploy it:
+Now that we've defined our infrastructure, let's deploy it. In the same directory as our `main.tf` file, execute the following:
 
 ``` Bash
 > terraform apply
@@ -123,7 +124,7 @@ Do you want to perform these actions?
 
 Before allowing us to deploy our infrastructure, Terraform prints an execution plan with all of the actions it will take. This is especially useful when multiple engineers are working on the same infrastructure (as is often the case). If someone else has modified your infrastructure, but that change is not present in your files, you will see it in this execution plan. So be sure to actually read this plan, otherwise you could end up accidentally rolling back infrastructure your colleagues deployed. And no one wants to be that guy.
 
-But in this case, we see just the one change we were expecting, a new bucket is being added. So let's type "yes" and deploy our bucket:
+But in this case, we see just the one change we were expecting: a new bucket is being added. So let's type "yes" and deploy our bucket:
 ``` Bash
   Enter a value: yes
 
@@ -143,7 +144,7 @@ gs://de-book-terraform-test-1234567654321/
 Obviously we'll be using a lot more infrastructure in production. I provide an example Terraform file with more resources listed in Appendix A. Documentation for the full list of infrastructure you can deploy is [here](https://registry.terraform.io/providers/hashicorp/google/latest/docs).
 ## Updating your Infrastructure
 We can expect our infrastructure needs to continue to change. Fortunately implementing that change is as simple as updating our Terraform file. Let's create a Pub/Sub Topic, a subscription for that Topic, and set `force_destroy` to `true` for our existing bucket. Our `main.tf` file now looks like:
-``` yaml
+``` JS
 terraform {
     required_providers {
         google = {
@@ -167,7 +168,7 @@ resource "google_storage_bucket" "de-book-terraform-test" {
     storage_class = "STANDARD"
 }
 
-# Added the resources below
+// Added the resources below
 resource "google_pubsub_topic" "terraform-test" {
   name = "terraform-test-topic"
 }
@@ -255,7 +256,7 @@ We see that Terraform added two resources and changed one resource, as we expect
 While it is still possible to provision GCP infrastructure through other means, such as the GCP Console or command line, in practice our Terraform file or files should represent our entire infrastructure on GCP.
 
 We can remove a resource by simply deleting the resource block from our Terraform file. Let's delete out bucket:
-``` yaml
+``` JS
 terraform {
     required_providers {
         google = {
@@ -272,7 +273,7 @@ provider "google" {
     zone    = "us-central1-c"
 }
 
-# Our GCS resource used to be here
+// Our GCS resource used to be here
 
 resource "google_pubsub_topic" "terraform-test" {
   name = "terraform-test-topic"
@@ -389,4 +390,4 @@ Destroy complete! Resources: 2 destroyed.
 
 ---
 
-Next Chapter: [Chapter 11: Continuous Integration with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_continuous_integration.md)
+Next Chapter: [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md)
