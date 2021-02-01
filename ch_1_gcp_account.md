@@ -17,8 +17,8 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md) <br>
 [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) <br>
 [Chapter 12: Monitoring and Alerting](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md) <br>
-Chapter 13: Start to Finish - Building a Complete Data Engineering Infrastructure <br>
-Appendix A: Example Code Repository
+[Chapter 13: Up and Running - Building a Complete Data Engineering Infrastructure](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_13_up_and_running.md) <br>
+[Appendix A: Example Code Repository](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/appendix_a_example_code/README.md)
 
 
 ---
@@ -81,7 +81,7 @@ You can also set up a service account through the `gsutil` utility:
 ``` bash
 > gcloud iam service-accounts create 'composer-dev'
 ```
-In order to set up a role for this account you'll need it's emails, which can found with:
+In order to set up a role for this account you'll need it's email, which can found with:
 ``` bash
 > gcloud iam service-accounts list
 DISPLAY NAME                            EMAIL                                               DISABLED

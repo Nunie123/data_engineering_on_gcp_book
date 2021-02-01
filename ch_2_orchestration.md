@@ -17,8 +17,8 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md) <br>
 [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) <br>
 [Chapter 12: Monitoring and Alerting](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md) <br>
-Chapter 13: Start to Finish - Building a Complete Data Engineering Infrastructure <br>
-Appendix A: Example Code Repository
+[Chapter 13: Up and Running - Building a Complete Data Engineering Infrastructure](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_13_up_and_running.md) <br>
+[Appendix A: Example Code Repository](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/appendix_a_example_code/README.md)
 
 
 ---
@@ -60,7 +60,7 @@ It's also important to be aware that unlike some other services by GCP, Composer
 ### Creating the Composer Instance
 In Chapter 1 I discussed installing the GCP command line tools. You'll need them for this section.
 
-You're first step is to enable Cloud Composer, which you can do [here](https://console.cloud.google.com/flows/enableapi?apiid=composer.googleapis.com). Select your Project from the drop-down and click "Continue". You'll be taken to a page prompting you to set up your credentials. GCP is reminding you that you should set up a Service Account that will allow you to access the Composer API that you just enabled. We already set up our Service Account in Chapter 1, but now we can grant the Service Account permission to set up a Compose Environment:
+You're first step is to enable Cloud Composer, which you can do [here](https://console.cloud.google.com/flows/enableapi?apiid=composer.googleapis.com). Select your Project from the drop-down and click "Continue". You'll be taken to a page prompting you to set up your credentials. GCP is reminding you that you should set up a Service Account that will allow you to access the Composer API that you just enabled. We already set up our Service Account in Chapter 1, but now we can grant the Service Account permission to set up a Composer Environment:
 ``` bash
 > gcloud projects add-iam-policy-binding 'de-book-dev' \
     --member='serviceAccount:composer-dev@de-book-dev.iam.gserviceaccount.com' \

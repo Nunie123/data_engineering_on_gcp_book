@@ -17,8 +17,8 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md) <br>
 **Chapter 11: Deployment Pipelines with Cloud Build** <br>
 [Chapter 12: Monitoring and Alerting](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md) <br>
-Chapter 13: Start to Finish - Building a Complete Data Engineering Infrastructure <br>
-Appendix A: Example Code Repository
+[Chapter 13: Up and Running - Building a Complete Data Engineering Infrastructure](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_13_up_and_running.md) <br>
+[Appendix A: Example Code Repository](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/appendix_a_example_code/README.md)
 
 
 ---
@@ -83,6 +83,7 @@ warning: You appear to have cloned an empty repository.
 
 Now let's build our file structure and (empty) files:
 ``` Bash
+> touch cloudbuild.yaml
 > mkdir dags
 > cd dags
 > mkdir python_scripts
@@ -227,7 +228,7 @@ OK
 We now have a code repository with two DAGs that we want deployed to GCP and two unit tests we want to pass before we allow our code to deploy.
 
 ## Create a GCP Trigger
-Now let's create a trigger. This trigger will kick off a series of Bash commands to test our code, then deploy it to GCP any time our GitHub repo's master branch has been updated. 
+Now let's create a Trigger. This Trigger will kick off a series of Bash commands to test our code, then deploy it to GCP any time our GitHub repo's master branch has been updated. 
 
 To accomplish this we'll first make our Cloud Build configuration file defining the commands we want to run when a change is pushed to the master branch. As you can probably guess just by looking at the file below, we're having Cloud Build take two actions. First, we're having it run our tests, just like we did in the command line above. If that succeeds without raising an error, then we will copy (using `rsync`, discussed in Chapter 3) the contents of our `dag/` folder into the GCS bucket where our Composer instance looks for DAGs. To find the bucket used for our Composer instance execute:
 ``` Bash
@@ -284,7 +285,7 @@ Instead of having one file for our Cloud Build configuration and another file fo
 
 ## Pushing to GitHub
 
-Now that our trigger is set up, all we have to do is push our code to the master branch of our GitHub repo, and it will run our deployment pipeline:
+Now that our Trigger is set up, all we have to do is push our code to the master branch of our GitHub repo, and it will run our deployment pipeline:
 
 ``` Bash
 > git add --all
@@ -316,7 +317,7 @@ As I've shown in Chapters 2 and 5, we can delete the Composer Environment by run
 ```
 It may take some time to delete the Composer environment, so you may want to open a new terminal session to clean up the rest while that runs.
 
-We already found the bucket name so we could add it to our cloudbuild.yaml file. 
+We already found the bucket name so we could add it to our cloudbuild.yaml file. Now let's delete it.
 ``` Bash
 > gsutil rm -r gs://us-central1-my-environment-c4c96098-bucket
 ```
@@ -337,7 +338,9 @@ name: trigger
 > gcloud beta builds triggers delete trigger
 ```
 
-Finally, let's delete our GitHub repository. For that we'll need to go to our repo's URL (e.g. https://github.com/Nunie123/cloud-build-test) and click on the "Settings" tab.
+Finally, we have our GitHub repository. We're going to need a GitHub repository for the next chapter, so feel free to leave this repo up if you'd like to reuse it.
+
+If you decide to delete it, you'll need to go to your repo's URL (e.g. https://github.com/Nunie123/cloud-build-test) and click on the "Settings" tab.
 ![Github repository main page](images/github_repo.png)
 
 When you scroll to the bottom of the settings page you'll see the button to delete the repository. You'll see all sorts of warnings, because deleting code by accident is a very bad thing. But if you're confident you won't need this repository anymore then go ahead and click the "Delete this repository" button and follow the prompts.
