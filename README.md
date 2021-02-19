@@ -76,4 +76,5 @@ This book is licensed under the [Attribution-NonCommercial-NoDerivatives 4.0 Int
 
 ---
 
-Next Chapter: Chapter 1: Setting up a GCP Account
+
+Next Chapter: [Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_1_gcp_account.md)
