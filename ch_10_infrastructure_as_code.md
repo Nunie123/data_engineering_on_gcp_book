@@ -5,15 +5,15 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ## Table of Contents
 [Preface](https://github.com/Nunie123/data_engineering_on_gcp_book) <br>
-[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_1_gcp_account.md) <br>
-[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_2_orchestration.md) <br>
-[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md) <br>
-[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
-[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
-[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
-[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
-[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
+[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_01_gcp_account.md) <br>
+[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md) <br>
+[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_03_data_lake.md) <br>
+[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_04_data_warehouse.md) <br>
+[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md) <br>
+[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md) <br>
+[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_07_parallel_processing.md) <br>
+[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_08_streaming.md) <br>
+[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_09_secrets.md) <br>
 **Chapter 10: Infrastructure as Code with Terraform** <br>
 [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) <br>
 [Chapter 12: Monitoring and Alerting](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md) <br>
@@ -23,7 +23,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ---
 
-# Chapter 10: Infrastructure as Code with Terraform
+# [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md): Infrastructure as Code with Terraform
 
 Much of a Data Engineer's responsibility is to manage their tools. So far in this book we've discussed Composer, GCS, BigQuery, Cloud Functions, Dataproc, Pub/Sub, and Secret Manager. We've been managing these resources through command line scripts, which is useful for learning, but not a good way to handle your production environment. We want to define these resources in text files and have those files in source control. This is called Infrastructure as Code.
 
@@ -64,7 +64,7 @@ terraform {
 
 // This "provider block" configures your google account.
 provider "google" {
-    credentials = file("../keys/de-book-dev-secret-key.json") # provide the file path to your GCP secret key file
+    credentials = file("../keys/de-book-dev-secret-key.json") // provide the file path to your GCP secret key file
     project = "de-book-dev"
     region  = "us-central1"
     zone    = "us-central1-c"
@@ -72,12 +72,13 @@ provider "google" {
 
 // This "resource block" configures the specific infrastructure you wish to deploy
 resource "google_storage_bucket" "de-book-terraform-test" {
-    name = "de-book-terraform-test-1234567654321"   # This is the name of the bucket to be created
+    name = "de-book-terraform-test-1234567654321"   // This is the name of the bucket to be created
     location = "US"
-    force_destroy = false   # This setting prevents us from deleting a bucket if there are files within
+    force_destroy = false   // This setting prevents us from deleting a bucket if there are files within
     storage_class = "STANDARD"
 }
 ```
+You can view how to create additional types of resource blocks [here](https://registry.terraform.io/providers/hashicorp/google/latest/docs).
 
 This code allows us to create a bucket called "de-book-terraform-test-1234567654321". While the above code only creates a single resource (a GCS bucket), we can add as many resource blocks as we need to this file to define all the infrastructure we need. We'll show this in the **Updating your Infrastructure** section, below.
 
@@ -92,6 +93,7 @@ While our infrastructure configuration files, like the one above, should go into
 Now that we've defined our infrastructure, let's deploy it. In the same directory as our `main.tf` file, execute the following:
 
 ``` Bash
+> terraform init
 > terraform apply
 
 An execution plan has been generated and is shown below.
@@ -141,7 +143,7 @@ Let's confirm that our bucket was created:
 gs://de-book-terraform-test-1234567654321/
 ```
 
-Obviously we'll be using a lot more infrastructure in production. I provide an example Terraform file with more resources listed in Appendix A. Documentation for the full list of infrastructure you can deploy is [here](https://registry.terraform.io/providers/hashicorp/google/latest/docs).
+Obviously we'll be using a lot more infrastructure in production. I provide an example Terraform file with more resources listed in [Appendix A](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/appendix_a_example_code/README.md). Documentation for the full list of infrastructure you can deploy is [here](https://registry.terraform.io/providers/hashicorp/google/latest/docs).
 ## Updating your Infrastructure
 We can expect our infrastructure needs to continue to change. Fortunately implementing that change is as simple as updating our Terraform file. Let's create a Pub/Sub Topic, a subscription for that Topic, and set `force_destroy` to `true` for our existing bucket. Our `main.tf` file now looks like:
 ``` JS
@@ -335,7 +337,7 @@ google_pubsub_subscription.example
 google_pubsub_topic.terraform-test
 ```
 
-We could delete these Pub/Sub resources with the command line, as we did in Chapter 8. However, we can also tell Terraform to destroy all of the resources it manages:
+We could delete these Pub/Sub resources with the command line, as we did in [Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_08_streaming.md). However, we can also tell Terraform to destroy all of the resources it manages:
 ``` Bash
 > terraform destroy
 google_pubsub_topic.terraform-test: Refreshing state... [id=projects/de-book-dev/topics/terraform-test-topic]

@@ -5,15 +5,15 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ## Table of Contents
 [Preface](https://github.com/Nunie123/data_engineering_on_gcp_book) <br>
-[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_1_gcp_account.md) <br>
-[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_2_orchestration.md) <br>
-[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md) <br>
-[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
-[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
-[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
+[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_01_gcp_account.md) <br>
+[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md) <br>
+[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_03_data_lake.md) <br>
+[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_04_data_warehouse.md) <br>
+[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md) <br>
+[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md) <br>
+[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_07_parallel_processing.md) <br>
 **Chapter 8: Streaming Data with Pub/Sub** <br>
-[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
+[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_09_secrets.md) <br>
 [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md) <br>
 [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) <br>
 [Chapter 12: Monitoring and Alerting](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md) <br>
@@ -23,7 +23,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ---
 
-# Chapter 8: Streaming Data with Pub/Sub
+# [Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_08_streaming.md): Streaming Data with Pub/Sub
 In previous chapters we've gone over how to set up batch-processing Data Pipelines, where a large number of records are added to our Warehouse at one time. Streaming, by contrast, focuses on adding small amounts of data very quickly, so that our Warehouse is updated constantly from the source system with minimal lag.
 
 To accomplish this we will be using GCP's Pub/Sub service. Pub/Sub is a messaging service that uses a "publication" and "subscription" architecture. For a particular Data Pipeline we will create a "Topic" in Pub/Sub. A Publisher service will publish data from the source system to the Topic, and then a Subscriber service will receive the data from the Topic and process it, such as inserting that data into BigQuery.
@@ -39,7 +39,7 @@ Creating a Topic is simple. Unlike Composer or Dataproc, there are [few configur
 ``` bash
 > gcloud pubsub topics create my_topic
 ```
-In Chapter 11 we'll discuss how to manage your Topics in Terraform, along with your other cloud infrastructure.
+In [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) we'll discuss how to manage your Topics in Terraform, along with your other cloud infrastructure.
 
 Now that we have our Topic, we're ready to create our Publisher and Subscriber.
 
@@ -48,14 +48,14 @@ The Publisher will need to have authorization to publish to your Topic. This mea
 
 However, your source data may come from a system that is unable or unwilling to publish directly to your Topic. In such an instance you will have to set up your own service to gather the data, then publish to your Topic. An example would be gathering data in small chunks (micro-batches) through a JDBC connection and publishing that data to a Pub/Sub Topic.
 
-For our purposes, we are going to upload data to a GCS bucket (covered in Chapter 3) and use a Cloud Function (covered in Chapter 6) to publish the data to a Pub/Sub Topic. Instead of running in a Cloud Function, you may decide to run the Publisher on Google Kubernetes Engine (GKE) or Cloud Run, which are also good options.
+For our purposes, we are going to upload data to a GCS bucket (covered in [Chapter 3](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_03_data_lake.md) ) and use a Cloud Function (covered in [Chapter 6](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md)) to publish the data to a Pub/Sub Topic. Instead of running in a Cloud Function, you may decide to run the Publisher on Google Kubernetes Engine (GKE) or Cloud Run, which are also good options.
 
 First let's create a bucket that will trigger the Cloud Function publisher:
 ``` Bash
 > gsutil mb gs://de-book-publisher
 ```
 
-Now let's create our Cloud Function to publish our data. As discussed in Chapter 6, this file must be saved as `main.py` before being uploaded to GCP.
+Now let's create our Cloud Function to publish our data. As discussed in [Chapter 6](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md), this file must be saved as `main.py` before being uploaded to GCP.
 ``` Python
 def publish_data(event, context):
     from google.cloud import storage
@@ -79,7 +79,7 @@ def publish_data(event, context):
 
 ```
 
-Our Cloud Function requires two libraries, so we've got to let GCP know we need these in our environment. As discussed in Chapter 6, we do this by adding a `requirements.txt` file in the same folder as our Cloud Function:
+Our Cloud Function requires two libraries, so we've got to let GCP know we need these in our environment. As discussed in [Chapter 6](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md), we do this by adding a `requirements.txt` file in the same folder as our Cloud Function:
 ``` text
 google-cloud-storage=1.35.0
 google-cloud-pubsub=2.2.0
@@ -167,4 +167,4 @@ We created a GCS bucket, Cloud Function, and Pub/Sub Topic in this chapter, so l
 
 ---
 
-Next Chapter: [Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md)
+Next Chapter: [Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_09_secrets.md)

@@ -5,15 +5,15 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ## Table of Contents
 [Preface](https://github.com/Nunie123/data_engineering_on_gcp_book) <br>
-[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_1_gcp_account.md) <br>
-[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_2_orchestration.md) <br>
-[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md) <br>
-[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
-[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
-[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
+[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_01_gcp_account.md) <br>
+[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md) <br>
+[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_03_data_lake.md) <br>
+[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_04_data_warehouse.md) <br>
+[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md) <br>
+[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md) <br>
 **Chapter 7: Parallel Processing with Dataproc and Spark** <br>
-[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
-[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
+[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_08_streaming.md) <br>
+[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_09_secrets.md) <br>
 [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md) <br>
 [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) <br>
 [Chapter 12: Monitoring and Alerting](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md) <br>
@@ -23,7 +23,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ---
 
-# Chapter 7: Parallel Processing with Dataproc and Spark
+# [Chapter 7](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_07_parallel_processing.md) : Parallel Processing with Dataproc and Spark
 Dataproc is GCP's fully managed service for running Apache Spark. Spark is an open-source program that has a wide array of capabilities, such as machine learning and data streaming, but I'm going to show you how we can use Spark perform transformations on very large data files. Spark's Python API (called PySpark), will look familiar to you if you have used Python's Pandas library. However, the key difference between processing data in Pandas vs. Spark is that Pandas works entirely in memory on a single machine, whereas Spark is designed to work across multiple machines and can manage the data in memory and on disk.
 
 Spark is operating on a Cluster of machines, and each machine is working in coordination to process a transformation job. This behavior works by default and allows Spark to perform massive parallel processing. That means we can quickly perform complex transformations on extremely large amounts of data.
@@ -42,7 +42,7 @@ However, there are good reasons to perform transformations before loading your d
 
 Even if you are taking an ELT approach to your Pipelines, there may be instances where you will be unable to load the data into BigQuery without first doing some transformations. For example, while BigQuery can ingest nested data such as an array of integers or an array of objects (in BQ the objects are called "Structs"), BigQuery cannot ingest an array of arrays. Additionally, you may run into other problems with source files, such as them being malformed, that prevents BigQuery from loading the files.
 
-In Chapter 5 we did some pre-processing before we loaded our JSON data into BigQuery: we converted the JSON file from standard JSON format to Newline-Delimited JSON. We were able to do this using the compute power from our Composer Environment cluster because the amount of data we were dealing with was small. If we're dealing with large amounts of data that needs pre-processing, then we need to spin up additional resources so that we don't overwhelm our Composer Environment.
+In [Chapter 5](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md) we did some pre-processing before we loaded our JSON data into BigQuery: we converted the JSON file from standard JSON format to Newline-Delimited JSON. We were able to do this using the compute power from our Composer Environment cluster because the amount of data we were dealing with was small. If we're dealing with large amounts of data that needs pre-processing, then we need to spin up additional resources so that we don't overwhelm our Composer Environment.
 
 Creating a Dataproc Cluster is an excellent way to bring more compute power to bear on your data before it is loaded into BigQuery. 
 
@@ -132,7 +132,7 @@ If you have periodic need for data processing with Spark, then you should delete
 However, if you are continuously using your Dataproc Cluster (e.g. to process data from a pipeline that has batches every 10 minutes), then it may make sense to leave your Cluster up all the time.
 
 ## Dataproc and Composer
-We've talked about how to use Dataproc, but we haven't really discussed how to integrate it into our Data Pipelines. The answer is simple enough, we can create tasks in Airflow (discussed in Chapter 5) to create the Cluster, submit the job, then delete the Cluster:
+We've talked about how to use Dataproc, but we haven't really discussed how to integrate it into our Data Pipelines. The answer is simple enough, we can create tasks in Airflow (discussed in [Chapter 5](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md)) to create the Cluster, submit the job, then delete the Cluster:
 ``` python
 t_create_cluster = BashOperator(
     task_id='create_cluster',
@@ -165,7 +165,7 @@ t_delete_cluster = BashOperator(
 )
 t_delete_cluster.set_upstream(t_submit_job)
 ```
-When managing a Dataproc Cluster from your Composer Environment it is important to have good alerting (discussed in Chapter 13). It is possible for Airflow to mark a task as failed (e.g. because it has timed out), without the Dataproc job ending or Cluster deleting itself.
+When managing a Dataproc Cluster from your Composer Environment it is important to have good alerting (discussed in [Chapter 13](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_13_up_and_running.md)). It is possible for Airflow to mark a task as failed (e.g. because it has timed out), without the Dataproc job ending or Cluster deleting itself.
 
 ## Cleaning Up
 We've already deleted our Dataproc Cluster above, so all that's left is for us to delete the bucket we created and the buckets created by Dataproc:
@@ -182,4 +182,4 @@ gs://de-book-dataproc/
 
 ---
 
-Next Chapter: [Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md)
+Next Chapter: [Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_08_streaming.md)

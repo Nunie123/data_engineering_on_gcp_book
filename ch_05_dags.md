@@ -5,15 +5,15 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ## Table of Contents
 [Preface](https://github.com/Nunie123/data_engineering_on_gcp_book) <br>
-[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_1_gcp_account.md) <br>
-[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_2_orchestration.md) <br>
-[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md) <br>
-[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
+[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_01_gcp_account.md) <br>
+[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md) <br>
+[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_03_data_lake.md) <br>
+[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_04_data_warehouse.md) <br>
 **Chapter 5: Setting up DAGs in Composer and Airflow** <br>
-[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
-[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
-[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
+[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md) <br>
+[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_07_parallel_processing.md) <br>
+[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_08_streaming.md) <br>
+[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_09_secrets.md) <br>
 [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md) <br>
 [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) <br>
 [Chapter 12: Monitoring and Alerting](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md) <br>
@@ -23,12 +23,12 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ---
 
-# Chapter 5: Setting up DAGs in Composer and Airflow 
+# [Chapter 5](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md): Setting up DAGs in Composer and Airflow 
 
 In previous chapters we focused on specific technologies: Composer, GCS, and BigQuery. In this chapter we'll be pulling together everything we've learned to build a realistic data pipeline. We're going to be setting up a Data Warehouse to allow our users to analyze cryptocurrency data. We'll be building a DAG to pull data into our Data Lake from a web API. We'll then be moving our data into BigQuery. Finally, we'll be running transformations on our data so that it is easy for our users wrangle.
 
 ## Initializing the GCP Infrastructure
-For this chapter we are going to need a Composer Environment, a GCS Bucket, and a couple BigQuery Datasets. In Chapter 11 I'll show how to manage each of these pieces of infrastructure in your code using Terraform. But for now, we're going to set them up using the command line tools.
+For this chapter we are going to need a Composer Environment, a GCS Bucket, and a couple BigQuery Datasets. In [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) I'll show how to manage each of these pieces of infrastructure in your code using Terraform. But for now, we're going to set them up using the command line tools.
 
 First, we need to make sure GCP uses our service account:
 ``` bash
@@ -46,7 +46,7 @@ The Composer Environment can take a good while to spin up after we issue the com
     --node-count 3 \
     --service-account composer-dev@de-book-dev.iam.gserviceaccount.com 
 ```
-For more details on setting up a Composer Environment check out Chapter 2.
+For more details on setting up a Composer Environment check out [Chapter 2](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md).
 
 Now let's create our GCS Buckets:
 ``` bash
@@ -66,7 +66,7 @@ While we're waiting for our Composer Environment to finish building we can start
 CoinGecko provides numerous free web API endpoints providing data on cryptocurrency. We are going to be getting data from their `/coins/markets` endpoint to get information about the top 100 currencies they track. The response is in standard JSON format, so we'll convert that to JSON Lines format, then save it in GCS. Finally, we'll load the data into BigQuery and remove duplicate records. You've already seen how to do almost every part of this pipeline in Chapters 1-3, this will just be bringing it all together.
 
 ### Creating the Tasks
-As I described in Chapter 2, Airflow manages a series of Tasks that do the work in your pipeline. Here I've chosen to break this pipeline into five Tasks:
+As I described in [Chapter 2](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md), Airflow manages a series of Tasks that do the work in your pipeline. Here I've chosen to break this pipeline into five Tasks:
 1. Download and save the source data.
 2. Copy the file to GCS.
 3. Load the data into BigQuery.
@@ -116,7 +116,7 @@ t_save_file_to_gcs.set_upstream(t_download_currency_data)
 We're using the `set_upstream()` method after each Task to define Task dependencies.
 
 #### Task 3: Load the Data into BigQuery
-As I mentioned in Chapter 4, the `bq load` command can be used to create a table if one does not already exist. So we do not need to create a separate Task for creating the table. However, we'll still need to specify a schema:
+As I mentioned in [Chapter 4](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_04_data_warehouse.md), the `bq load` command can be used to create a table if one does not already exist. So we do not need to create a separate Task for creating the table. However, we'll still need to specify a schema:
 ``` json
 [
     {
@@ -353,7 +353,7 @@ default_args = {
 
 dag = DAG(
     'coin_gecko',
-    schedule_interval="0 * * * *",      # run every day at midnight UTC
+    schedule_interval="0 0 * * *",      # run every day at midnight UTC
     max_active_runs=1,                  # only let 1 instance run at a time
     catchup=False,                      # if a scheduled run is missed, skip it
     default_args=default_args
@@ -383,7 +383,7 @@ default_args = {
 
 dag = DAG(
     'coin_gecko',
-    schedule_interval="0 * * * *",   # run every day at midnight UTC
+    schedule_interval="0 0 * * *",   # run every day at midnight UTC
     max_active_runs=1,
     catchup=False,
     default_args=default_args
@@ -409,7 +409,7 @@ t_download_currency_data = PythonVirtualenvOperator(
     requirements=["requests==2.7.0", "pandas==1.1.3"],
     python_callable=download_currency_data,
     op_kwargs={"filename": filepath},
-    dag=dag,
+    dag=dag
 )
 
 
@@ -464,7 +464,7 @@ t_update_currencies_table.set_upstream([t_create_currencies_table, t_load_data_i
 ```
 
 ### Deploying and Running the DAG
-So now we have our DAG file (`coin_gecko.py`), our schema file (`coin_gecko_schema.json`) and our sql file (`currencies.sql`). Our next step is to get them deployed to Composer. We'll talk about deployment pipelines in Chapter 12, but for now we can deploy through the command line:
+So now we have our DAG file (`coin_gecko.py`), our schema file (`coin_gecko_schema.json`) and our sql file (`currencies.sql`). Our next step is to get them deployed to Composer. We'll talk about deployment pipelines in [Chapter 12](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md), but for now we can deploy through the command line:
 ``` bash
 > gcloud composer environments storage dags import \
     --environment bitcoin-dev \
@@ -525,4 +525,4 @@ Finally, let's get rid of our datasets:
 
 ---
 
-Next Chapter: [Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md)
+Next Chapter: [Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md)

@@ -5,15 +5,15 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ## Table of Contents
 [Preface](https://github.com/Nunie123/data_engineering_on_gcp_book) <br>
-[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_1_gcp_account.md) <br>
-[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_2_orchestration.md) <br>
-[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md) <br>
-[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
-[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
-[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
-[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
-[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
+[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_01_gcp_account.md) <br>
+[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md) <br>
+[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_03_data_lake.md) <br>
+[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_04_data_warehouse.md) <br>
+[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md) <br>
+[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md) <br>
+[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_07_parallel_processing.md) <br>
+[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_08_streaming.md) <br>
+[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_09_secrets.md) <br>
 [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md) <br>
 [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) <br>
 **Chapter 12: Monitoring and Alerting** <br>
@@ -23,7 +23,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ---
 
-# Chapter 12: Monitoring and Alerting
+# [Chapter 12](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md): Monitoring and Alerting
 
 We've spent 11 chapters in this book going over how to set up your infrastructure. But that doesn't do us much good if everything breaks and you don't fix it. There will be problems, whether with your code, or a GCP outage, or a malformed file. It's our responsibility as data engineers to quickly identify when there's a problem and give ourselves as much information as we can to fix the issue.
 
@@ -31,7 +31,7 @@ Conveniently, GCP provides dashboard for each of its services, so we can easily 
 
 In this chapter we're going to set up alerting on a Composer (Airflow) instance, and on a deployment pipeline. We'll be using Airflow's built-in alerting functionality for failed Tasks, and rolling our own alerting functionality for the Cloud Build deployment pipeline. There's lots of places you can send alerts, such as BigQuery, Pub/Sub, or GCS, but in this chapter we'll be sending our alerts to a Slack channel.
 
-While we're only covering alerting for two pieces of infrastructure in this chapter, you should set up alerting for all of your critical infrastructure in a production environment. In Chapter 13 we'll be setting up a complete infrastructure, including alerting for all our critical systems, so check that out if you want to see how alerting is done on other tools, such as DataProc.
+While we're only covering alerting for two pieces of infrastructure in this chapter, you should set up alerting for all of your critical infrastructure in a production environment. In [Chapter 13](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_13_up_and_running.md) we'll be setting up a complete infrastructure, including alerting for all our critical systems, so check that out if you want to see how alerting is done on other tools, such as DataProc.
 
 Specifically what we're going to do in this chapter is:
 1. Instantiate a Composer Environment.
@@ -41,7 +41,7 @@ Specifically what we're going to do in this chapter is:
 5. Create alerting on our deployment pipeline.
 6. Deploy a DAG and see how the alerts work.
 
-Many of these steps were just covered in the last chapter (Chapter 11), so I'll be brief on the details. Please refer to Chapter 11 if you want a more detailed explanation of how to set up a deployment pipeline, and Chapters 2 and 5 for more details on setting up a Composer Environment.
+Many of these steps were just covered in the last chapter (Chapter 11), so I'll be brief on the details. Please refer to [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) if you want a more detailed explanation of how to set up a deployment pipeline, and Chapters 2 and 5 for more details on setting up a Composer Environment.
 
 ## Starting a Composer Environment
 This command should be pretty familiar to you by now. We do this first because it'll take awhile for GCP to set up our instance.
@@ -55,21 +55,21 @@ This command should be pretty familiar to you by now. We do this first because i
     --node-count 3 \
     --service-account composer-dev@de-book-dev.iam.gserviceaccount.com 
 ```
-In a production setting we would create this Composer Environment using Terraform, discussed in Chapter 10.
+In a production setting we would create this Composer Environment using Terraform, discussed in [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md).
 
 ## Create a Slack Workspace
 We need to send the alerts somewhere that will catch the eye of the data engineering team, so Slack is a good choice. Slack has a pretty intuitive setup process, and creating a workspace is free. So go [here](https://slack.com/create) to create your workspace. 
 
 Once you've got your new slack workspace set up go [here](https://api.slack.com/messaging/webhooks) to set up incoming webhooks, which will allow you to post messages to Slack through an HTTP POST request.
 
-The URL you've just generated should be kept secret (so that random strangers can't post messages to your Slack channels). Consequently, we're going to add it to Google Secret Manager, discussed in more detail in Chapter 9.
+The URL you've just generated should be kept secret (so that random strangers can't post messages to your Slack channels). Consequently, we're going to add it to Google Secret Manager, discussed in more detail in [Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_09_secrets.md).
 ``` Bash
 > echo -n "https://hooks.slack.com/services/QWERTY/ASDFG/123456" | gcloud secrets create slack_webhook --data-file=-
 ```
 Replace the above string with the incoming webhook URL indicated by Slack for your account.
 
 ## Create a Deployment Pipeline
-Just like last chapter, we'll need to create a GitHub repository and link it to our GCP account. Rather than just repeating that whole section in this chapter, you should go [read that section from Chapter 11](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md#create-a-github-repo-and-connect-it-to-gcp).
+Just like last chapter, we'll need to create a GitHub repository and link it to our GCP account. Rather than just repeating that whole section in this chapter, you should go [read that section from [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md#create-a-github-repo-and-connect-it-to-gcp).
 
 Now that we have our GitHub Repo connected to GCP, we need to clone the repo to our local machine:
 ``` Bash
@@ -125,7 +125,7 @@ Finally, let's deploy our Cloud Build Trigger to GCP:
     --build-config=cloudbuild.yaml
 ```
 
-Everything we did in this section was described in more detail in the previous chapter, so check out Chapter 11 if you want to know a bit more about what we just did.
+Everything we did in this section was described in more detail in the previous chapter, so check out [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) if you want to know a bit more about what we just did.
 
 ## Create DAGs with Custom Alerting
 We're going to need to use the `requests` and `google-cloud-secret-manager` libraries to send messages to our Slack workspace. Let's add these packages to our Composer Environment. First, let's fill in the requirements.txt file in the top level of our repo:
@@ -185,7 +185,7 @@ default_args = {
 
 dag = DAG(
     'my_dag',
-    schedule_interval="0 * * * *",   # run every day at midnight UTC
+    schedule_interval="0 0 * * *",   # run every day at midnight UTC
     max_active_runs=1,
     catchup=False,
     default_args=default_args
@@ -233,13 +233,13 @@ To get deployment notifications to Slack we are going to rely on Cloud Build, Pu
 
 The only magic in this process is Cloud Build automatically publishing to a Pub/Sub topic. We have to build all the other steps, but we've already covered all these tools previously in this book.
 
-We already set up Cloud Build, above, so let's create our Pub/Sub Topic. I cover Pub/Sub topics in more detail in Chapter 8.
+We already set up Cloud Build, above, so let's create our Pub/Sub Topic. I cover Pub/Sub topics in more detail in [Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_08_streaming.md).
 ``` Bash
 > gcloud pubsub topics create cloud-builds
 ```
 The name of the Topic must be `cloud-builds` so that Cloud Build knows where to publish.
 
-Now for the last piece, our Cloud Function. I covered Cloud Functions in more detail in Chapter 6. 
+Now for the last piece, our Cloud Function. I covered Cloud Functions in more detail in [Chapter 6](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md). 
 
 At the top level of the repository we created for our Airflow DAGs, lets create our function files:
 ``` Bash
@@ -313,7 +313,7 @@ That's it. Deployment messages will now be sent to our Slack workspace. In the n
 
 
 ## Testing our Alerts
-Now we have two alerts set up. One will send an alert if a Task fails. The other will send an alert whenever there's a deployment. So let's start by deploying our code and seeing a Slack alert notifying us whether the deploy was successful. As we talked about in Chapter 11, we kick off our deploy process by pushing our code to GitHub:
+Now we have two alerts set up. One will send an alert if a Task fails. The other will send an alert whenever there's a deployment. So let's start by deploying our code and seeing a Slack alert notifying us whether the deploy was successful. As we talked about in [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md), we kick off our deploy process by pushing our code to GitHub:
 ``` Bash
 > git status
 > git add --all
@@ -387,14 +387,14 @@ Now let's visit our Airflow Web UI to trigger our DAG. We can find the web addre
 https://ic1434f8836d84236p-tp.appspot.com
 ```
 
-Let's trigger the DAG (check out chapter 5 for more details on interacting with the Airflow UI). Our task will retry once. When it fails on it's second try it will send us an alert in Slack.
+Let's trigger the DAG (check out [Chapter 5](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md) for more details on interacting with the Airflow UI). Our task will retry once. When it fails on it's second try it will send us an alert in Slack.
 
 ## Wrapping Up
 We did a lot in this chapter. We set up a Composer Environment, a DAG, a Cloud Function, a Cloud Build Trigger, a Secret, and a Pub/Sub Topic. Hopefully you feel pretty good about how your knowledge has grown over this book such that you're able to tie multiple GCP services together to build your infrastructure. 
 
 This is the last chapter in this book where we will be introducing new tools. While there is a lot more we could have talked about on GCP, you should now have a good understanding of the major components of a typical data engineering stack, and how to stand those components up using GCP.
 
-The next chapter, Chapter 13, will go over how to get a complete Data Engineering infrastructure up and running.
+The next chapter, [Chapter 13](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_13_up_and_running.md), will go over how to get a complete Data Engineering infrastructure up and running.
 
 ## Cleaning Up
 We used a lot of different GCP services in this chapter, so let's start taking them down.
@@ -443,6 +443,8 @@ id: 53042473-7323-471d-817d-a8e59939d84a
 name: trigger
 > gcloud beta builds triggers delete trigger
 ```
+
+In [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) I showed you how to delete your GitHub repository. See the instructions there if you want to delete the repo we made in this chapter.
 
 ---
 

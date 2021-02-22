@@ -5,15 +5,15 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ## Table of Contents
 [Preface](https://github.com/Nunie123/data_engineering_on_gcp_book) <br>
-[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_1_gcp_account.md) <br>
+[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_01_gcp_account.md) <br>
 **Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow** <br>
-[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md) <br>
-[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
-[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
-[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
-[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
-[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
+[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_03_data_lake.md) <br>
+[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_04_data_warehouse.md) <br>
+[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md) <br>
+[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md) <br>
+[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_07_parallel_processing.md) <br>
+[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_08_streaming.md) <br>
+[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_09_secrets.md) <br>
 [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md) <br>
 [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) <br>
 [Chapter 12: Monitoring and Alerting](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md) <br>
@@ -23,7 +23,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ---
 
-# Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow
+# [Chapter 2](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md): Setting up Batch Processing Orchestration with Composer and Airflow
 
 ## Apache Airflow Overview
 
@@ -37,12 +37,12 @@ Managing processing dependencies is a big part of creating a robust data pipelin
 
 If we're moving data from the Google Analytics API to a BigQuery table we know that we better download that data first before we try to load it into BigQuery. One way to manage this dependency is within our code, and every time we want this data updated we run our script. But suppose it takes an hour to download the data, and 5 minutes to upload it to BigQuery. If the script fails during the upload then you may be stuck running the whole script again, waiting another hour to download data that's already on your local disk. Alternatively, you could go about developing custom error handling for each of your pipelines that allows it to be restarted in pieces. If you've got a lot of pipelines, that means a lot of code to write and maintain.
 
-Airflow addresses this problem through the use of "Tasks", which are chunks of work that Airflow manages. These Tasks are organized into a Directed Acyclic Graph (DAG), which is a group of Tasks with dependencies defined between these Tasks. So you might have a DAG called "update_google_analytics_table" that has two Tasks: "download_data_from_google_analytics" and "upload_data_to_bq". We can tell airflow that "download_data_from_google_analytics" must complete successfully before "upload_data_to_bq" is run, and if either Task fails Airflow is to retry running the Task. After a designated number of retries, if the Task still has not succeeded it will mark itself as failed (in Chapter 13 we'll discuss setting up alerts for these failures).
+Airflow addresses this problem through the use of "Tasks", which are chunks of work that Airflow manages. These Tasks are organized into a Directed Acyclic Graph (DAG), which is a group of Tasks with dependencies defined between these Tasks. So you might have a DAG called "update_google_analytics_table" that has two Tasks: "download_data_from_google_analytics" and "upload_data_to_bq". We can tell airflow that "download_data_from_google_analytics" must complete successfully before "upload_data_to_bq" is run, and if either Task fails Airflow is to retry running the Task. After a designated number of retries, if the Task still has not succeeded it will mark itself as failed (in [Chapter 13](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_13_up_and_running.md) we'll discuss setting up alerts for these failures).
 
 Another nice feature of Airflow is that it has a browser-based GUI that is useful for managing and monitoring your DAGs.<br>
 ![Airflow Screenshot](images/airflow_dag_sample_1.png)
 
-Whole [books](https://www.manning.com/books/data-pipelines-with-apache-airflow) have been written about Apache Airflow, and we've only scratched the surface. But this chapter is just focused on configuring Airflow to run, we'll revisit Airflow in Chapter 5, where we'll discuss programming DAGs to run your data pipelines.
+Whole [books](https://www.manning.com/books/data-pipelines-with-apache-airflow) have been written about Apache Airflow, and we've only scratched the surface. But this chapter is just focused on configuring Airflow to run, we'll revisit Airflow in [Chapter 5](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md), where we'll discuss programming DAGs to run your data pipelines.
 
 ## Google Cloud Composer Overview
 
@@ -58,7 +58,7 @@ Apache Airflow, whether installed yourself or managed by GCP, requires a collect
 It's also important to be aware that unlike some other services by GCP, Composer does not auto-scale. You are required to designate the number and size of the machines you want to use, with more compute power assigned meaning an increased bill from GCP. If you need to change your assigned compute power you must do so manually.
 
 ### Creating the Composer Instance
-In Chapter 1 I discussed installing the GCP command line tools. You'll need them for this section.
+In [Chapter 1](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_01_gcp_account.md)I discussed installing the GCP command line tools. You'll need them for this section.
 
 You're first step is to enable Cloud Composer, which you can do [here](https://console.cloud.google.com/flows/enableapi?apiid=composer.googleapis.com). Select your Project from the drop-down and click "Continue". You'll be taken to a page prompting you to set up your credentials. GCP is reminding you that you should set up a Service Account that will allow you to access the Composer API that you just enabled. We already set up our Service Account in Chapter 1, but now we can grant the Service Account permission to set up a Composer Environment:
 ``` bash
@@ -67,7 +67,7 @@ You're first step is to enable Cloud Composer, which you can do [here](https://c
     --role='roles/composer.worker'
 ```
 
-As stated above, a Composer "Environment" is equivalent to a managed Airflow instance. You create an Environment through the [console](https://console.cloud.google.com/composer/environments/create) and through the `gcloud` utility. In Chapter 11 I will go over managing your GCP infrastructure with Terraform, including managing Composer Environments.
+As stated above, a Composer "Environment" is equivalent to a managed Airflow instance. You create an Environment through the [console](https://console.cloud.google.com/composer/environments/create) and through the `gcloud` utility. In [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) I will go over managing your GCP infrastructure with Terraform, including managing Composer Environments.
 
 We can create a Composer Environment with the following command (WARNING: it can take up to a half hour to create the Environment):
 ``` bash
@@ -94,9 +94,9 @@ To verify your Environment is running you can execute:
 ```
 
 ### Testing a DAG
-The point of the Airflow instance is to orchestrate your DAGs, which is how you'll organize your batch data processing. I'll be talking a lot more about how to make DAGs in Chapter 5 (after we talk about GCS and BigQuery), but I'll go over a quick example here.
+The point of the Airflow instance is to orchestrate your DAGs, which is how you'll organize your batch data processing. I'll be talking a lot more about how to make DAGs in [Chapter 5](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md) (after we talk about GCS and BigQuery), but I'll go over a quick example here.
 
-A DAG is defined in a Python file that Airflow monitors and executes when scheduled. We'll create a DAG that has two tasks: one task will download a list of (mock) products and the other task will print a message indicating the task completed. In Chapter 11 I will discuss how to automate the deployment of these files to GCP, where they will run, but for now we can do that manually. So let's make our Python file:
+A DAG is defined in a Python file that Airflow monitors and executes when scheduled. We'll create a DAG that has two tasks: one task will download a list of (mock) products and the other task will print a message indicating the task completed. In [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) I will discuss how to automate the deployment of these files to GCP, where they will run, but for now we can do that manually. So let's make our Python file:
 ``` python
 # my_first_dag.py
 
@@ -157,7 +157,7 @@ t_print_message.set_upstream(t_get_product_data)
 
 
 # In a more realistic DAG we would be saving this data to GCS, then updating BigQuery. 
-# We'll dive deeper into building DAGs in Chapter 5.
+# We'll dive deeper into building DAGs in [Chapter 5](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md).
 ```
 Now we need to put our DAG file where our Composer Environment can find it. GCP handles this by sticking all of the DAGs in a GCS bucket. We can find the bucket by running:
 ``` bash
@@ -166,7 +166,7 @@ Now we need to put our DAG file where our Composer Environment can find it. GCP 
     --format="get(config.dagGcsPrefix)"
 gs://us-central1-my-dev-environm-63db6d2e-bucket/dags
 ```
-You can access the bucket with your DAGs just like any other bucket (we talk more about GCS in Chapter 3), but we don't actually need to access the bucket directly to add our DAG. Instead we can use the command:
+You can access the bucket with your DAGs just like any other bucket (we talk more about GCS in [Chapter 3](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_03_data_lake.md) ), but we don't actually need to access the bucket directly to add our DAG. Instead we can use the command:
 ``` bash
 > gcloud composer environments storage dags import \
     --environment my-dev-environment \
@@ -177,17 +177,17 @@ You can access the bucket with your DAGs just like any other bucket (we talk mor
 Now lets view the Airflow web interface so we can see our DAG running. We can see the address by running:
 ``` bash
 > gcloud composer environments describe my-dev-environment \
-    --location us-central1 | \
+    --location us-central1 \
     --format="get(config.airflowUri)"
 ```
-Copy that address to your browser, and authenticate if required. We'll talk more about the Airflow web interface in Chapter 5. For now lets click on "my_first_dag".
+Copy that address to your browser, and authenticate if required. We'll talk more about the Airflow web interface in [Chapter 5](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md). For now lets click on "my_first_dag".
 
 ![Airflow web interface](images/airflow_web_ui_1.png)
 
 From here we can see that our tasks completed successfully.
 
 ## Cleaning Up
-GCP charges us for using the services we set up in this chapter. We will be using this Composer Environment again in Chapter 5, so if you don't feel like setting it up again you can keep it running. Just be aware of your costs for [Composer](https://cloud.google.com/composer/pricing) and [GCS](https://cloud.google.com/storage/pricing). When we set up our Composer Environment GCP also set up resources in GCS for us, which is convenient for setting Airflow up. We just have to remember we have more to shut down than Composer when we are cleaning up.
+GCP charges us for using the services we set up in this chapter. We will be using this Composer Environment again in [Chapter 5](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md), so if you don't feel like setting it up again you can keep it running. Just be aware of your costs for [Composer](https://cloud.google.com/composer/pricing) and [GCS](https://cloud.google.com/storage/pricing). When we set up our Composer Environment GCP also set up resources in GCS for us, which is convenient for setting Airflow up. We just have to remember we have more to shut down than Composer when we are cleaning up.
 
 We can delete the Composer Environment by running:
 ``` bash
@@ -206,4 +206,4 @@ Now we can delete the bucket with:
 
 ---
 
-Next Chapter: [Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md)
+Next Chapter: [Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_03_data_lake.md)

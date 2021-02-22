@@ -5,15 +5,15 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ## Table of Contents
 [Preface](https://github.com/Nunie123/data_engineering_on_gcp_book) <br>
-[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_1_gcp_account.md) <br>
-[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_2_orchestration.md) <br>
+[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_01_gcp_account.md) <br>
+[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md) <br>
 **Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)** <br>
-[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
-[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
-[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
-[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
-[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
+[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_04_data_warehouse.md) <br>
+[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md) <br>
+[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md) <br>
+[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_07_parallel_processing.md) <br>
+[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_08_streaming.md) <br>
+[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_09_secrets.md) <br>
 [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md) <br>
 [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) <br>
 [Chapter 12: Monitoring and Alerting](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md) <br>
@@ -23,13 +23,13 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ---
 
-# Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)
+# [Chapter 3](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_03_data_lake.md) : Building a Data Lake with Google Cloud Storage (GCS)
 GCS provides cheap and easily accessible storage for any type of file. It is quite similar to AWS Simple Storage Solution (S3), and even has dedicated commands to be interoperable with S3.
 
 ## What's a Data Lake?
 A Data Lake is a schemaless data repository used for storing source files in their native format. If you're completely unfamiliar with the concept, you can think of it as a folder where all the data you use is saved together.
 
-While a Data Warehouse imposes a schema on the data in the form of tables and relationships between tables (see Chapter 4 for more information on Data Warehousing), a Data Lake imposes no schema on the data it stores. Some benefits are:
+While a Data Warehouse imposes a schema on the data in the form of tables and relationships between tables (see [Chapter 4](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_04_data_warehouse.md) for more information on Data Warehousing), a Data Lake imposes no schema on the data it stores. Some benefits are:
 1. It's easy to ingest source data if the entire ingestion process is just to save the data unedited from the source system.
 2. It ensures data is not lost as a result of data transformations. The original data is always accessible for downstream processing.
 
@@ -46,10 +46,10 @@ GCS works well as a Data Lake because it is cheap, easy to access, and integrate
 
 Every file saved in GCS is called an Object (also referred to as a "Blob"). Every Object is contained within a Bucket. Technically, every Object is saved at the top level of the Bucket. There is no hierarchical structure like would be used in a Windows or MacOS file system. However, GCS allows the Objects to be named as if they are in sub-directories, so for practical purposes we can save files in sub-directories inside a Bucket.
 
-You can manage GCS through the Console, the `gsutil` command line tool, through various code libraries, or through a REST API. I'll discuss `gsutil` and the Python library, since those integrate easiest with Airflow (I'll demonstrate using GCS with Airflow/Composer in Chapter 5).
+You can manage GCS through the Console, the `gsutil` command line tool, through various code libraries, or through a REST API. I'll discuss `gsutil` and the Python library, since those integrate easiest with Airflow (I'll demonstrate using GCS with Airflow/Composer in [Chapter 5](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md)).
 
 ### Using the `gsutil` command line tool
-In Chapter 1 I discussed installing the GCP command line tools. You'll need them for this section.
+In [Chapter 1](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_01_gcp_account.md)I discussed installing the GCP command line tools. You'll need them for this section.
 
 Creating a bucket is quite easy:
 ``` bash
@@ -123,7 +123,7 @@ Inside your Python virtual environment run:
 ``` bash
 > pip install --upgrade google-cloud-storage
 ```
-Now we need to configure our credentials. In Chapter 2 we set up a Service Account and generated a secret key. You'll need that service account and key file to continue. You can see all your service accounts with:
+Now we need to configure our credentials. In [Chapter 2](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md) we set up a Service Account and generated a secret key. You'll need that service account and key file to continue. You can see all your service accounts with:
 ``` bash
 > gcloud iam service-accounts list
 DISPLAY NAME                            EMAIL                                               DISABLED
@@ -137,7 +137,7 @@ We now need to give our composer-dev service account permission to manage GCS:
     --member='serviceAccount:composer-dev@de-book-dev.iam.gserviceaccount.com' \
     --role='roles/storage.admin'
 ```
-Finally, we need to set the `GOOGLE_APPLICATION_CREDENTIALS` variable in our shell, referencing our secret key file that we saved in Chapter 2:
+Finally, we need to set the `GOOGLE_APPLICATION_CREDENTIALS` variable in our shell, referencing our secret key file that we saved in [Chapter 2](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md):
 ``` bash
 > export GOOGLE_APPLICATION_CREDENTIALS="/path/to/keys/de-book-dev.json"
 ```
@@ -177,7 +177,7 @@ While the [prices](https://cloud.google.com/storage/pricing) for storage in GCS 
 gs://de-book-dev/
 gs://de-book-test-bucket/
 ```
-If you didn't clean up after Chapter 2, you should see some Buckets related to the Composer Environment we set up, in addition to the Buckets we created this chapter.
+If you didn't clean up after [Chapter 2](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md), you should see some Buckets related to the Composer Environment we set up, in addition to the Buckets we created this chapter.
 
 To delete a Bucket and everything inside run:
 ``` bash
@@ -191,4 +191,4 @@ To delete all the objects in a Bucket, but leave the Bucket itself, run:
 
 ---
 
-Next Chapter: [Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md)
+Next Chapter: [Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_04_data_warehouse.md)

@@ -5,15 +5,15 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ## Table of Contents
 **Preface** <br>
-[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_1_gcp_account.md) <br>
-[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_2_orchestration.md) <br>
-[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md) <br>
-[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
-[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
-[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
-[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
-[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
+[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_01_gcp_account.md) <br>
+[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md) <br>
+[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_03_data_lake.md) <br>
+[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_04_data_warehouse.md) <br>
+[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md) <br>
+[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md) <br>
+[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_07_parallel_processing.md) <br>
+[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_08_streaming.md) <br>
+[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_09_secrets.md) <br>
 [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md) <br>
 [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) <br>
 [Chapter 12: Monitoring and Alerting](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md) <br>
@@ -40,6 +40,8 @@ This book assumes your familiarity with SQL and Python (if you're not familiar w
 
 This book covers a lot of ground. Many of the subjects we'll cover in just part of a chapter will have entire books written about them. I will provide references for further research. Just know that while this book is comprehensive in the sense that it provides all the information you need to get a stack up and running, there is still plenty of information a Data Engineer needs to know that I've omitted from this book.
 
+What is covered in this book is not **THE** data engineering stack, it is **A** data engineering stack. Even within GCP there are lots of ways to accomplish similar tasks. For example, I could have used Dataflow (based on Apache Beam) for the streaming solution. Or I could have gone with a completely different paradigm for how I store and query data, such as storing data as Parquet files in GCS and querying with Spark. I mention this here to make sure you understand that this book is not the complete guide to being a data engineer. Rather, it is an introduction to the types of problems a data engineer solves, and a sampling common tools in GCP used to solve those problems.
+
 Finally, there are a vast array of Data Engineering tools that are in use. I cover many popular tools for Data Engineering, but many more have been left out of this book due to brevity and my lack of experience with them. If you feel I left off something important, please read the **Contributions** section below.
 
 ## How to Read This Book
@@ -49,10 +51,10 @@ If you're looking to use this book as a guid to set up your Data Engineering inf
 
 Likely, many people will find their way to this book trying to solve a specific problem (e.g. how to set up alerting on GCP's Composer/Airflow service). For these people I've tried to make each chapter as self-contained as possible. When I use infrastructure created in a previous chapter I'll always provide a link to the previous chapter where it's explained.
 
-The best way to learn is by doing, which is why each chapter provides code samples. I encourage you to build this infrastructure with me, as you read through the chapters. Included with this book in Appendix A I've provided an example of what your infrastructure as code will look like.
+The best way to learn is by doing, which is why each chapter provides code samples. I encourage you to build this infrastructure with me, as you read through the chapters. Included with this book in [Appendix A](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/appendix_a_example_code/README.md) I've provided an example of what your infrastructure as code will look like.
 
 ## A Note About the Code in the Book
-The code within the chapters is for demonstration purposes, and is not necessarily in the format you should be running in production. For the sake of clarity and brevity the code usually omits good practices such as type hinting, validation, error handling, and docstrings. If you want a better sense of what production-ready code looks like, review the code in Appendix A.
+The code within the chapters is for demonstration purposes, and is not necessarily in the format you should be running in production. For the sake of clarity and brevity the code usually omits good practices such as type hinting, validation, error handling, and docstrings. If you want a better sense of what production-ready code looks like, review the code in [Appendix A](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/appendix_a_example_code/README.md).
 
 ## Contributions
 
@@ -72,7 +74,7 @@ I look forward to working with you all.
 
 
 ## License
-This book is licensed under the [Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)](https://creativecommons.org/licenses/by-nc-nd/4.0/) license.
+You are free to use this book under the [Attribution-NonCommercial-NoDerivatives 4.0 International (CC BY-NC-ND 4.0)](https://creativecommons.org/licenses/by-nc-nd/4.0/) license.
 
 ---
 

@@ -5,15 +5,15 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ## Table of Contents
 [Preface](https://github.com/Nunie123/data_engineering_on_gcp_book) <br>
-[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_1_gcp_account.md) <br>
-[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_2_orchestration.md) <br>
-[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md) <br>
-[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
-[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
+[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_01_gcp_account.md) <br>
+[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md) <br>
+[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_03_data_lake.md) <br>
+[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_04_data_warehouse.md) <br>
+[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md) <br>
 **Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions** <br>
-[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
-[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
-[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
+[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_07_parallel_processing.md) <br>
+[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_08_streaming.md) <br>
+[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_09_secrets.md) <br>
 [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md) <br>
 [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) <br>
 [Chapter 12: Monitoring and Alerting](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md) <br>
@@ -23,12 +23,12 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ---
 
-# Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions
+# [Chapter 6](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md): Setting up Event-Triggered Pipelines with Cloud Functions
 
-In Chapter 5 I demonstrated how to set up a Data Pipeline that ran on a schedule (or by manually triggering through the Web UI). Airflow has a lot of flexibility for when and how often a DAG should run, but sometimes you don't want your DAG to run on a schedule. Suppose your organization's Data Science team periodically generates a CSV file with valuable information, and you want to ingest that file into your Data Warehouse as soon as it is available. You can't ingest on a schedule, because you don't know when the file will be uploaded. What we can do instead is set up a Cloud Function to listen for a new file to be uploaded, and once a new file is detected it can kick off the Data Pipeline for ingesting that file.
+In [Chapter 5](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md) I demonstrated how to set up a Data Pipeline that ran on a schedule (or by manually triggering through the Web UI). Airflow has a lot of flexibility for when and how often a DAG should run, but sometimes you don't want your DAG to run on a schedule. Suppose your organization's Data Science team periodically generates a CSV file with valuable information, and you want to ingest that file into your Data Warehouse as soon as it is available. You can't ingest on a schedule, because you don't know when the file will be uploaded. What we can do instead is set up a Cloud Function to listen for a new file to be uploaded, and once a new file is detected it can kick off the Data Pipeline for ingesting that file.
 
 ## Overview of Cloud Functions
-GCP's Cloud Functions is a "serverless" code execution service. It allows predefined code to be executed when triggered by an event, such as GCS events, HTTP events, and Pub/Sub events. We'll focus on GCS events in this chapter, as responding to a new file being uploaded to a GCS Bucket is a common task for Data Engineers, but Cloud Functions has much more functionality than what I'll cover. Additionally, I'll talk about Pub/Sub in Chapter 8 as I discuss streaming Data Pipelines.
+GCP's Cloud Functions is a "serverless" code execution service. It allows predefined code to be executed when triggered by an event, such as GCS events, HTTP events, and Pub/Sub events. We'll focus on GCS events in this chapter, as responding to a new file being uploaded to a GCS Bucket is a common task for Data Engineers, but Cloud Functions has much more functionality than what I'll cover. Additionally, I'll talk about Pub/Sub in [Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_08_streaming.md) as I discuss streaming Data Pipelines.
 
 ## Setting Up an Event-Triggered Pipeline
 
@@ -48,7 +48,7 @@ We need somewhere for the data to go, so let's create a BigQuery Dataset and tab
 > bq mk --table food.food_ranks food_name:STRING,ranking:INT64
 ```
 
-Now let's enable the Cloud Function API on GCP. In Chapter 2 I showed how to enable the Composer API through the console, but we can also enable services through the command line:
+Now let's enable the Cloud Function API on GCP. In [Chapter 2](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md) I showed how to enable the Composer API through the console, but we can also enable services through the command line:
 ``` bash
 > gcloud services enable cloudfunctions.googleapis.com
 ```
@@ -144,4 +144,4 @@ A note about `gs://gcf-sources-204024561480-us-central1`: This bucket is used as
 
 ---
 
-Next Chapter: [Chapter 7: Parallel Processing with DataProc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md)
+Next Chapter: [Chapter 7: Parallel Processing with DataProc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_07_parallel_processing.md)

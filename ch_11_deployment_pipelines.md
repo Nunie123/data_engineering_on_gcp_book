@@ -5,15 +5,15 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ## Table of Contents
 [Preface](https://github.com/Nunie123/data_engineering_on_gcp_book) <br>
-[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_1_gcp_account.md) <br>
-[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_2_orchestration.md) <br>
-[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md) <br>
-[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_4_data_warehouse.md) <br>
-[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
-[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
-[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
-[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
+[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_01_gcp_account.md) <br>
+[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md) <br>
+[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_03_data_lake.md) <br>
+[Chapter 4: Building a Data Warehouse with BigQuery](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_04_data_warehouse.md) <br>
+[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md) <br>
+[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md) <br>
+[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_07_parallel_processing.md) <br>
+[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_08_streaming.md) <br>
+[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_09_secrets.md) <br>
 [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md) <br>
 **Chapter 11: Deployment Pipelines with Cloud Build** <br>
 [Chapter 12: Monitoring and Alerting](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md) <br>
@@ -23,7 +23,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ---
 
-# Chapter 11: Deployment Pipelines with Cloud Build
+# [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md): Deployment Pipelines with Cloud Build
 We've been talking a lot about data pipelines in this book, but in this chapter we'll be building another type of pipeline: a deployment pipeline.
 
 A deployment pipeline is the series of steps that occur between when a developer wants to put their code in production and when it actually gets there. This is also sometimes called a "build pipeline" or a "CI/CD pipeline". The concept of continuous integration/continuous delivery ("CI/CD"), is often intertwined with a deployment pipeline, but they are distinct. CI/CD is a strategy that allows developers to integrate their code into production whenever it is ready, whereas a deployment pipeline is the tool used to actually get the code into production. The deployment pipeline we are building in this chapter is compatible with a CI/CD strategy. More information on CI/CD is available [here](https://continuousdelivery.com/).
@@ -39,7 +39,7 @@ In this chapter we are going to:
 
 
 ## Instantiate a Composer Instance
-As we discussed way back in Chapter 2, it can take quite awhile for GCP to build a new Composer instance (called an "environment"), so it's best we start that process now for it to run while we do everything else:
+As we discussed way back in [Chapter 2](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md), it can take quite awhile for GCP to build a new Composer instance (called an "environment"), so it's best we start that process now for it to run while we do everything else:
 ``` bash
 > gcloud composer environments create my-environment \
     --location us-central1 \
@@ -71,7 +71,7 @@ Now back in the GCP console you should select the button to install the Cloud Bu
 That's it. Our GitHub repository is now connected to our GCP project.
 
 ## Writing our DAGs
-If we're going to demonstrate a deployment pipeline we should probably have some code to deploy, so let's write that. We're going to write some DAGs to be deployed to Composer (covered in more detail in Chapter 5).
+If we're going to demonstrate a deployment pipeline we should probably have some code to deploy, so let's write that. We're going to write some DAGs to be deployed to Composer (covered in more detail in [Chapter 5](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md)).
 
 Because we'll be deploying to our GitHub repo, we should start by cloning the repo down to our local machine.
 ``` Bash
@@ -122,7 +122,7 @@ default_args = {
 
 dag = DAG(
     'first_dag',
-    schedule_interval="0 * * * *",   # run every day at midnight UTC
+    schedule_interval="0 0 * * *",   # run every day at midnight UTC
     max_active_runs=1,
     catchup=False,
     default_args=default_args
@@ -159,7 +159,7 @@ default_args = {
 
 dag = DAG(
     'second_dag',
-    schedule_interval="0 * * * *",   # run every day at midnight UTC
+    schedule_interval="0 0 * * *",   # run every day at midnight UTC
     max_active_runs=1,
     catchup=False,
     default_args=default_args
@@ -230,7 +230,7 @@ We now have a code repository with two DAGs that we want deployed to GCP and two
 ## Create a GCP Trigger
 Now let's create a Trigger. This Trigger will kick off a series of Bash commands to test our code, then deploy it to GCP any time our GitHub repo's master branch has been updated. 
 
-To accomplish this we'll first make our Cloud Build configuration file defining the commands we want to run when a change is pushed to the master branch. As you can probably guess just by looking at the file below, we're having Cloud Build take two actions. First, we're having it run our tests, just like we did in the command line above. If that succeeds without raising an error, then we will copy (using `rsync`, discussed in Chapter 3) the contents of our `dag/` folder into the GCS bucket where our Composer instance looks for DAGs. To find the bucket used for our Composer instance execute:
+To accomplish this we'll first make our Cloud Build configuration file defining the commands we want to run when a change is pushed to the master branch. As you can probably guess just by looking at the file below, we're having Cloud Build take two actions. First, we're having it run our tests, just like we did in the command line above. If that succeeds without raising an error, then we will copy (using `rsync`, discussed in [Chapter 3](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_03_data_lake.md) ) the contents of our `dag/` folder into the GCS bucket where our Composer instance looks for DAGs. To find the bucket used for our Composer instance execute:
 ``` Bash
 > gcloud composer environments describe my-environment \
     --location us-central1 \
@@ -264,7 +264,7 @@ Now we need to deploy our trigger to GCP. We can do that through the command lin
     --build-config=cloudbuild.yaml
 ```
 
-You may have noticed the `beta` in our gcloud command (if you are prompted to install "beta" components after executing the above command, do so). The `beta` signifies that this `gcloud builds triggers` command utility is still being tested by GCP developers, so should be used with caution (and best avoided in production code). Fortunately, as we discussed in Chapter 10, we shouldn't be deploying our infrastructure through the command line, anyway. If we we were deploying through Terraform we would just add a resource block to our Terraform file like this:
+You may have noticed the `beta` in our gcloud command (if you are prompted to install "beta" components after executing the above command, do so). The `beta` signifies that this `gcloud builds triggers` command utility is still being tested by GCP developers, so should be used with caution (and best avoided in production code). Fortunately, as we discussed in [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md), we shouldn't be deploying our infrastructure through the command line, anyway. If we we were deploying through Terraform we would just add a resource block to our Terraform file like this:
 ``` JS
 resource "google_cloudbuild_trigger" "filename-trigger" {
   trigger_template {
@@ -309,7 +309,7 @@ We can see that our DAGs are deployed and successfully run:
 ## Cleaning up
 For this chapter we created a Composer Environment, a bucket (created by Composer) for our DAGs, a Cloud Build Trigger, and a GitHub repository. Let's start taking them down.
 
-In this chapter we built our infrastructure using the command line for expedience. If you used Terraform to build your infrastructure (as discussed in Chapter 10), the you can run the `terraform destroy` command to take your GCP resources down.
+In this chapter we built our infrastructure using the command line for expedience. If you used Terraform to build your infrastructure (as discussed in [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md)), the you can run the `terraform destroy` command to take your GCP resources down.
 
 As I've shown in Chapters 2 and 5, we can delete the Composer Environment by running:
 ``` bash

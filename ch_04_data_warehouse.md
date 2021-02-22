@@ -5,15 +5,15 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ## Table of Contents
 [Preface](https://github.com/Nunie123/data_engineering_on_gcp_book) <br>
-[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_1_gcp_account.md) <br>
-[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_2_orchestration.md) <br>
-[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_3_data_lake.md) <br>
+[Chapter 1: Setting up a GCP Account](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_01_gcp_account.md) <br>
+[Chapter 2: Setting up Batch Processing Orchestration with Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md) <br>
+[Chapter 3: Building a Data Lake with Google Cloud Storage (GCS)](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_03_data_lake.md) <br>
 **Chapter 4: Building a Data Warehouse with BigQuery** <br>
-[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md) <br>
-[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_6_event_triggers.md) <br>
-[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_7_parallel_processing.md) <br>
-[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_8_streaming.md) <br>
-[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_9_secrets.md) <br>
+[Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md) <br>
+[Chapter 6: Setting up Event-Triggered Pipelines with Cloud Functions](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_06_event_triggers.md) <br>
+[Chapter 7: Parallel Processing with Dataproc and Spark](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_07_parallel_processing.md) <br>
+[Chapter 8: Streaming Data with Pub/Sub](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_08_streaming.md) <br>
+[Chapter 9: Managing Credentials with Google Secret Manager](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_09_secrets.md) <br>
 [Chapter 10: Infrastructure as Code with Terraform](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_10_infrastructure_as_code.md) <br>
 [Chapter 11: Deployment Pipelines with Cloud Build](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_11_deployment_pipelines.md) <br>
 [Chapter 12: Monitoring and Alerting](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_12_monitoring.md) <br>
@@ -23,7 +23,7 @@ NOTE: This book is currently incomplete. If you find errors or would like to fil
 
 ---
 
-# Chapter 4: Building a Data Warehouse with BigQuery
+# [Chapter 4](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_04_data_warehouse.md): Building a Data Warehouse with BigQuery
 BigQuery is GCP's fully managed Data Warehouse service. There are no steps to take to get it running, as long as you've got a GCP account you can just start using it. 
 
 While GCP's Data Engineering infrastructure services are often quite similar to corresponding AWS services, BigQuery is actually a significant departure from AWS's Data Warehouse service: Redshift. 
@@ -41,7 +41,7 @@ BigQuery works well with GCS and Composer, allowing you to load and transform yo
 While you can do SQL scripting inside the Query Editor, you're going to want to use the `bq` command line tool and BigQuery Python library, described below.
 
 ## Using the `bq` Command Line Tool
-In Chapter 1 I discussed installing the GCP command line tools. You'll need them for this section.
+In [Chapter 1](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_01_gcp_account.md)I discussed installing the GCP command line tools. You'll need them for this section.
 
 We'll also need to give our service account permission to access BigQuery:
 ``` bash
@@ -253,7 +253,7 @@ I specified that the table is partitioned on the `created_on` field, so right no
 Partitions are always optional, but are useful when you know you will be filtering on a particular field (e.g. querying for all products created in the last seven days). If I included `--time_partitioning_type=DAY` but did not provide a field to partition on, BigQuery would have automatically assigned a partition date of the date the record was ingested into BigQuery. We can filter on this automatically generated partition date by using BigQuery's [pseudo-columns](https://cloud.google.com/bigquery/docs/querying-partitioned-tables#limiting_partitions_queried_using_pseudo_columns): `_PARTITIONDATE`, and `_PARTITIONTIME`.
 
 ## Using the `google.cloud.bigquery` Python Library
-We can also interact with BigQuery in Python. In Chapter 2 we used the `google.cloud.storage` library, and now for BigQuery we'll need to install the `google.cloud.bigquery` library:
+We can also interact with BigQuery in Python. In [Chapter 2](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_02_orchestration.md) we used the `google.cloud.storage` library, and now for BigQuery we'll need to install the `google.cloud.bigquery` library:
 ``` bash
 > pip install --upgrade google-cloud-bigquery
 ```
@@ -349,7 +349,7 @@ load_json_data(table_id, source_file_location, schema)
 Just like above, we're loading data with a nested field. Unlike the `bq load` command, if you wish to use the BigQuery's Python API to load data into a partitioned table you must create the table with the specified partition first, then load the data.
 
 ## Cleaning Up
-Because BigQuery bills based on data processed and storage quantity, rather than uptime, leaving our test data in there from this chapter will incur almost no costs. Nonetheless, it's good to clean up so we can have a blank start when we start creating and loading tables as part of our DAGs in Chapter 5.
+Because BigQuery bills based on data processed and storage quantity, rather than uptime, leaving our test data in there from this chapter will incur almost no costs. Nonetheless, it's good to clean up so we can have a blank start when we start creating and loading tables as part of our DAGs in [Chapter 5](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md).
 
 Let's start by listing all our datasets:
 ``` bash
@@ -366,4 +366,4 @@ Now let's delete them. We use the `-r` flag to indicate we also want the associa
 
 ---
 
-Next Chapter: [Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_5_dags.md)
+Next Chapter: [Chapter 5: Setting up DAGs in Composer and Airflow](https://github.com/Nunie123/data_engineering_on_gcp_book/blob/master/ch_05_dags.md)
